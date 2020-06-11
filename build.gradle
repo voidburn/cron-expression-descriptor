@@ -1,14 +1,83 @@
-plugins {
-    id 'java'
-}
-
 group 'com.burning'
 version '1.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
+buildscript {
+    // Extra properties (valid for all projects if defined here)
+    ext {
+        junitJupiterVersion = "5.6.0"
+        shadowVersion = "5.2.0"
+    }
+
+    // Repositories for build scripts
+    repositories {
+        // Maven
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+
+        // Sonatype repositories
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+
+    // Dependencies for build scripts
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:$shadowVersion"
+    }
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+allprojects {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Plugins
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'idea'
+
+    idea{
+        module{
+            inheritOutputDirs = false
+            outputDir = compileJava.destinationDir
+            testOutputDir = compileTestJava.destinationDir
+        }
+    }
+
+    // Compatibility
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Repositories
+    repositories {
+        // Maven
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+
+        // Sonatype repositories
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Compiler flags
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            // Warn about deprecations
+            options.compilerArgs << "-Xlint:deprecation"
+
+            // Warn about unchecked casts
+            //options.compilerArgs << "-Xlint:unchecked"
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Unit testing
+    dependencies {
+        testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }
