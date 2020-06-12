@@ -249,6 +249,11 @@ public class ExpressionParser {
         return parsed;
     }
 
+    /**
+     * Massage the parsed expression into a format that can be digested by the ExpressionDescriptor
+     *
+     * @param parsed
+     */
     private void normalizeExpression(final String[] parsed) {
         // Convert ? to * only for DOM and DOW
         parsed[3] = parsed[3].replace("?", "*");
