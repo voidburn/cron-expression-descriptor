@@ -311,7 +311,7 @@ public class ExpressionParser {
 
         // Convert JAN-DEC format to 1-12 format
         for (int i = 1; i <= 12; i++) {
-            final String currentMonth = java.time.Month.values()[i].name();
+            final String currentMonth = Month.values()[i].name();
             parsed[4] = parsed[4].replace(currentMonth, String.valueOf(i + 1));
 
             // Found, early exit
