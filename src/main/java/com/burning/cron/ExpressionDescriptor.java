@@ -5,7 +5,10 @@ import com.burning.cron.ExpressionParser.Month;
 import com.burning.cron.ExpressionParser.Options;
 import com.burning.utils.RxReplace;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,10 +18,9 @@ public class ExpressionDescriptor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //region FIELDS
 
-    // Config
-    public static final  String            MISSING_RESOURCE_VALUE = "";
-    private static final String            LOCALIZATION_BUNDLE    = "localization";
-    private static final ArrayList<String> ISO_LANGUAGE_NAME      = new ArrayList<>(Arrays.asList("ru", "uk", "de", "it", "tr", "pl", "ro", "da", "sl", "fi", "sv"));
+    // Constants
+    private static final String MISSING_RESOURCE_VALUE = "";
+    private static final String LOCALIZATION_BUNDLE    = "localization";
 
     // Functional implementations
     @FunctionalInterface
@@ -94,14 +96,7 @@ public class ExpressionDescriptor {
         this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale);
         this.parsed = false;
         this.options = options;
-
-        if (options.use24HourTimeFormat()) {
-            // 24HourTimeFormat specified in options so use it
-            use24HourTimeFormat = options.use24HourTimeFormat();
-        } else {
-            // 24HourTimeFormat not specified, default based on Locales
-            use24HourTimeFormat = ISO_LANGUAGE_NAME.contains(locale.getLanguage());
-        }
+        this.use24HourTimeFormat = options.use24HourTimeFormat();
     }
 
     //endregion
