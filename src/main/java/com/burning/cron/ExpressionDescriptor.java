@@ -117,8 +117,7 @@ public class ExpressionDescriptor {
      * @return The cron expression description
      */
     public String getDescription(final DescriptionType type) {
-        String description = "";
-
+        String description;
         try {
             if (!parsed) {
                 final ExpressionParser parser = new ExpressionParser(expression, options);
@@ -127,9 +126,6 @@ public class ExpressionDescriptor {
             }
 
             switch (type) {
-                case FULL:
-                    description = getFullDescription();
-                    break;
                 case TIMEOFDAY:
                     description = GetTimeOfDayDescription();
                     break;
@@ -155,7 +151,7 @@ public class ExpressionDescriptor {
                     description = GetYearDescription();
                     break;
                 default:
-                    description = GetSecondsDescription();
+                    description = getFullDescription();
                     break;
             }
         } catch (final Exception e) {
@@ -262,34 +258,40 @@ public class ExpressionDescriptor {
      * @return
      */
     protected String GetSecondsDescription() {
-        return getSegmentDescription(expressionParts[0], getString("EverySecond"), desc -> desc, desc -> String.format(getString("EveryX0Seconds"), desc), desc -> getString("SecondsX0ThroughX1PastTheMinute"), desc -> {
-            try {
-                final int i = Integer.parseInt(desc);
+        return getSegmentDescription(expressionParts[0],
+                                     getString("EverySecond"),
+                                     desc -> desc,
+                                     desc -> String.format(getString("EveryX0Seconds"), desc),
+                                     desc -> getString("SecondsX0ThroughX1PastTheMinute"),
+                                     desc -> {
+                                         try {
+                                             final int i = Integer.parseInt(desc);
 
-                if (desc.equals("0")) {
-                    return "";
-                } else if (i < 20) {
-                    return getString("AtX0SecondsPastTheMinute");
-                } else {
-                    final String specialized = getString("AtX0SecondsPastTheMinuteGt20");
-                    if (specialized != null) {
-                        return specialized;
-                    } else {
-                        return getString("AtX0SecondsPastTheMinute");
-                    }
-                }
-            } catch (NumberFormatException e) {
-                // Parse failure, original implementation returs the default string anyway
-                return getString("AtX0SecondsPastTheMinute");
-            }
-        }, desc -> {
-            final String specialized = getString("ComaMinX0ThroughMinX1");
-            if (specialized != null) {
-                return specialized;
-            } else {
-                return getString("ComaX0ThroughX1");
-            }
-        });
+                                             if (desc.equals("0")) {
+                                                 return "";
+                                             } else if (i < 20) {
+                                                 return getString("AtX0SecondsPastTheMinute");
+                                             } else {
+                                                 final String specialized = getString("AtX0SecondsPastTheMinuteGt20");
+                                                 if (specialized != null) {
+                                                     return specialized;
+                                                 } else {
+                                                     return getString("AtX0SecondsPastTheMinute");
+                                                 }
+                                             }
+                                         } catch (NumberFormatException e) {
+                                             // Parse failure, original implementation returs the default string anyway
+                                             return getString("AtX0SecondsPastTheMinute");
+                                         }
+                                     },
+                                     desc -> {
+                                         final String specialized = getString("ComaMinX0ThroughMinX1");
+                                         if (specialized != null) {
+                                             return specialized;
+                                         } else {
+                                             return getString("ComaX0ThroughX1");
+                                         }
+                                     });
     }
 
     /**
@@ -300,32 +302,38 @@ public class ExpressionDescriptor {
     protected String GetMinutesDescription() {
         final String secondsExpression = expressionParts[0];
 
-        return getSegmentDescription(expressionParts[1], getString("EveryMinute"), desc -> desc, desc -> String.format(getString("EveryX0Minutes"), desc), desc -> getString("MinutesX0ThroughX1PastTheHour"), desc -> {
-            try {
-                int target = Integer.parseInt(desc);
-                if (desc.equals("0") && secondsExpression.equals("")) {
-                    return "";
-                } else if (target < 20) {
-                    return getString("AtX0MinutesPastTheHour");
-                } else {
-                    final String specialFormat = getString("AtX0MinutesPastTheHourGt20");
-                    if (specialFormat != null && !specialFormat.isEmpty()) {
-                        return specialFormat;
-                    } else {
-                        return getString("AtX0MinutesPastTheHour");
-                    }
-                }
-            } catch (NumberFormatException e) {
-                return getString("AtX0MinutesPastTheHour");
-            }
-        }, desc -> {
-            final String specialFormat = getString("ComaMinX0ThroughMinX1");
-            if (specialFormat != null && !specialFormat.isEmpty()) {
-                return specialFormat;
-            }
+        return getSegmentDescription(expressionParts[1],
+                                     getString("EveryMinute"),
+                                     desc -> desc,
+                                     desc -> String.format(getString("EveryX0Minutes"), desc),
+                                     desc -> getString("MinutesX0ThroughX1PastTheHour"),
+                                     desc -> {
+                                         try {
+                                             int target = Integer.parseInt(desc);
+                                             if (desc.equals("0") && secondsExpression.equals("")) {
+                                                 return "";
+                                             } else if (target < 20) {
+                                                 return getString("AtX0MinutesPastTheHour");
+                                             } else {
+                                                 final String specialFormat = getString("AtX0MinutesPastTheHourGt20");
+                                                 if (specialFormat != null && !specialFormat.isEmpty()) {
+                                                     return specialFormat;
+                                                 } else {
+                                                     return getString("AtX0MinutesPastTheHour");
+                                                 }
+                                             }
+                                         } catch (NumberFormatException e) {
+                                             return getString("AtX0MinutesPastTheHour");
+                                         }
+                                     },
+                                     desc -> {
+                                         final String specialFormat = getString("ComaMinX0ThroughMinX1");
+                                         if (specialFormat != null && !specialFormat.isEmpty()) {
+                                             return specialFormat;
+                                         }
 
-            return getString("ComaX0ThroughX1");
-        });
+                                         return getString("ComaX0ThroughX1");
+                                     });
     }
 
     /**
@@ -359,44 +367,57 @@ public class ExpressionDescriptor {
             // or a dupe description like "every day, every day".
             description = "";
         } else {
-            description = getSegmentDescription(expressionParts[5], getString("ComaEveryDay"), desc -> {
-                final String exp = desc.replace("#", "").replace("L", "");
-                final int dayNum = Integer.parseInt(exp);
+            description = getSegmentDescription(expressionParts[5],
+                                                getString("ComaEveryDay"),
+                                                desc -> {
+                                                    // Drop everything past # (included) if the expression is specifying a DOM
+                                                    String exp = desc.contains("#") ? desc.substring(0, desc.indexOf("#")) : desc;
 
-                return getString(Day.values()[dayNum].name());
-            }, desc -> String.format(getString("ComaEveryX0DaysOfTheWeek"), desc), desc -> getString("ComaX0ThroughX1"), desc -> {
-                String format;
-                if (desc.contains("#")) {
-                    final String dayOfWeekOfMonthNumber = desc.substring(desc.indexOf("#") + 1);
-                    String dayOfWeekOfMonthDescription = null;
-                    switch (dayOfWeekOfMonthNumber) {
-                        case "1":
-                            dayOfWeekOfMonthDescription = getString("First");
-                            break;
-                        case "2":
-                            dayOfWeekOfMonthDescription = getString("Second");
-                            break;
-                        case "3":
-                            dayOfWeekOfMonthDescription = getString("Third");
-                            break;
-                        case "4":
-                            dayOfWeekOfMonthDescription = getString("Fourth");
-                            break;
-                        case "5":
-                            dayOfWeekOfMonthDescription = getString("Fifth");
-                            break;
-                    }
+                                                    // Remove "Last" if specified
+                                                    if (exp.contains("L")) {
+                                                        exp = exp.replace("L", "");
+                                                    }
+
+                                                    final int dayNum = Integer.parseInt(exp);
+
+                                                    return getString(Day.values()[dayNum].name());
+                                                },
+                                                desc -> String.format(getString("ComaEveryX0DaysOfTheWeek"), desc),
+                                                desc -> getString("ComaX0ThroughX1"),
+                                                desc -> {
+                                                    String format;
+                                                    if (desc.contains("#")) {
+                                                        final String dayOfWeekOfMonthNumber = desc.substring(desc.indexOf("#") + 1);
+                                                        String dayOfWeekOfMonthDescription = null;
+                                                        switch (dayOfWeekOfMonthNumber) {
+                                                            case "1":
+                                                                dayOfWeekOfMonthDescription = getString("First");
+                                                                break;
+                                                            case "2":
+                                                                dayOfWeekOfMonthDescription = getString("Second");
+                                                                break;
+                                                            case "3":
+                                                                dayOfWeekOfMonthDescription = getString("Third");
+                                                                break;
+                                                            case "4":
+                                                                dayOfWeekOfMonthDescription = getString("Fourth");
+                                                                break;
+                                                            case "5":
+                                                                dayOfWeekOfMonthDescription = getString("Fifth");
+                                                                break;
+                                                        }
 
 
-                    format = getString("ComaOnTheSpace") + dayOfWeekOfMonthDescription + getString("SpaceX0OfTheMonth");
-                } else if (desc.contains("L")) {
-                    format = getString("ComaOnTheLastX0OfTheMonth");
-                } else {
-                    format = getString("ComaOnlyOnX0");
-                }
+                                                        format = getString("ComaOnTheSpace") + dayOfWeekOfMonthDescription + getString("SpaceX0OfTheMonth");
+                                                    } else if (desc.contains("L")) {
+                                                        format = getString("ComaOnTheLastX0OfTheMonth");
+                                                    } else {
+                                                        format = getString("ComaOnlyOnX0");
+                                                    }
 
-                return format;
-            }, desc -> getString("ComaX0ThroughX1"));
+                                                    return format;
+                                                },
+                                                desc -> getString("ComaX0ThroughX1"));
         }
 
         return description;
@@ -408,25 +429,29 @@ public class ExpressionDescriptor {
      * @return
      */
     protected String GetMonthDescription() {
-        return getSegmentDescription(expressionParts[4], "", desc -> {
-            final int month = Integer.parseInt(desc) - 1; // Offset to match the enum's ordinals
+        return getSegmentDescription(expressionParts[4],
+                                     "",
+                                     desc -> {
+                                         final int month = Integer.parseInt(desc) - 1; // Offset to match the enum's ordinals
 
-            return getString(Month.values()[month].name());
-        }, desc -> String.format(getString("ComaEveryX0Months"), desc), desc -> {
-            final String specialFormat = getString("ComaMonthX0ThroughMonthX1");
-            if (specialFormat != null && !specialFormat.isEmpty()) {
-                return specialFormat;
-            }
+                                         return getString(Month.values()[month].name());
+                                     }, desc -> String.format(getString("ComaEveryX0Months"), desc),
+                                     desc -> {
+                                         final String specialFormat = getString("ComaMonthX0ThroughMonthX1");
+                                         if (specialFormat != null && !specialFormat.isEmpty()) {
+                                             return specialFormat;
+                                         }
 
-            return getString("ComaX0ThroughX1");
-        }, desc -> getString("ComaOnlyInX0"), desc -> {
-            final String specialFormat = getString("ComaMonthX0ThroughMonthX1");
-            if (specialFormat != null && !specialFormat.isEmpty()) {
-                return specialFormat;
-            }
+                                         return getString("ComaX0ThroughX1");
+                                     }, desc -> getString("ComaOnlyInX0"),
+                                     desc -> {
+                                         final String specialFormat = getString("ComaMonthX0ThroughMonthX1");
+                                         if (specialFormat != null && !specialFormat.isEmpty()) {
+                                             return specialFormat;
+                                         }
 
-            return getString("ComaX0ThroughX1");
-        });
+                                         return getString("ComaX0ThroughX1");
+                                     });
     }
 
     /**
@@ -435,8 +460,7 @@ public class ExpressionDescriptor {
      * @return The DAYOFMONTH description
      */
     protected String GetDayOfMonthDescription() {
-        String description = null;
-
+        String description;
         final String expression = expressionParts[3];
         switch (expression) {
             case "L":
@@ -460,13 +484,19 @@ public class ExpressionDescriptor {
                         final String offSetDays = lastDayOffsetMatcher.group(1);
                         description = String.format(getString("CommaDaysBeforeTheLastDayOfTheMonth"), offSetDays);
                     } else {
-                        description = getSegmentDescription(expression, getString("ComaEveryDay"), desc -> desc, desc -> {
-                            if (desc.equals("1")) {
-                                return getString("ComaEveryDay");
-                            }
+                        description = getSegmentDescription(expression,
+                                                            getString("ComaEveryDay"),
+                                                            desc -> desc,
+                                                            desc -> {
+                                                                if (desc.equals("1")) {
+                                                                    return getString("ComaEveryDay");
+                                                                }
 
-                            return getString("ComaEveryX0Days");
-                        }, desc -> getString("ComaBetweenDayX0AndX1OfTheMonth"), desc -> getString("ComaOnDayX0OfTheMonth"), desc -> getString("ComaX0ThroughX1"));
+                                                                return getString("ComaEveryX0Days");
+                                                            },
+                                                            desc -> getString("ComaBetweenDayX0AndX1OfTheMonth"),
+                                                            desc -> getString("ComaOnDayX0OfTheMonth"),
+                                                            desc -> getString("ComaX0ThroughX1"));
 
                     }
                 }
@@ -482,30 +512,36 @@ public class ExpressionDescriptor {
      * @return The YEAR description
      */
     private String GetYearDescription() {
-        return getSegmentDescription(expressionParts[6], "", desc -> {
-            if (yearPattern.matcher(desc).matches()) {
-                final Calendar calendar = Calendar.getInstance(locale);
-                calendar.set(Integer.parseInt(desc), Calendar.JANUARY, 1);
+        return getSegmentDescription(expressionParts[6],
+                                     "",
+                                     desc -> {
+                                         if (yearPattern.matcher(desc).matches()) {
+                                             final Calendar calendar = Calendar.getInstance(locale);
+                                             calendar.set(Integer.parseInt(desc), Calendar.JANUARY, 1);
 
-                return String.valueOf(calendar.get(Calendar.YEAR));
-            }
+                                             return String.valueOf(calendar.get(Calendar.YEAR));
+                                         }
 
-            return desc;
-        }, desc -> String.format(getString("ComaEveryX0Years"), desc), desc -> {
-            final String specialFormat = getString("ComaYearX0ThroughYearX1");
-            if (specialFormat == null || !specialFormat.isEmpty()) {
-                return specialFormat;
-            }
+                                         return desc;
+                                     },
+                                     desc -> String.format(getString("ComaEveryX0Years"), desc),
+                                     desc -> {
+                                         final String specialFormat = getString("ComaYearX0ThroughYearX1");
+                                         if (specialFormat == null || !specialFormat.isEmpty()) {
+                                             return specialFormat;
+                                         }
 
-            return getString("ComaX0ThroughX1");
-        }, desc -> getString("ComaOnlyInYearX0"), desc -> {
-            final String specialFormat = getString("ComaYearX0ThroughYearX1");
-            if (specialFormat == null || !specialFormat.isEmpty()) {
-                return specialFormat;
-            }
+                                         return getString("ComaX0ThroughX1");
+                                     },
+                                     desc -> getString("ComaOnlyInYearX0"),
+                                     desc -> {
+                                         final String specialFormat = getString("ComaYearX0ThroughYearX1");
+                                         if (specialFormat == null || !specialFormat.isEmpty()) {
+                                             return specialFormat;
+                                         }
 
-            return getString("ComaX0ThroughX1");
-        });
+                                         return getString("ComaX0ThroughX1");
+                                     });
     }
 
     /**
@@ -566,7 +602,7 @@ public class ExpressionDescriptor {
                     }
                 }
 
-                if (i > 0 && segments.length > 1 && (i == segments.length - 1 || segments.length == 2)) {
+                if (i > 0 && i == segments.length - 1) {
                     descriptionContent.append(getString("SpaceAndSpace"));
                 }
 
