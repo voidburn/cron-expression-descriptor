@@ -58,7 +58,7 @@ public class ExpressionParser {
     };
 
     // Data
-    private enum Day {
+    public enum Day {
         SUN,
         MON,
         TUE,
@@ -68,7 +68,7 @@ public class ExpressionParser {
         SAT
     }
 
-    private enum Month {
+    public enum Month {
         JAN,
         FEB,
         MAR,
@@ -99,9 +99,9 @@ public class ExpressionParser {
 
         // Defaults
         private boolean throwExceptionOnParseError = true;
-        private boolean verbose                    = false;
-        private boolean dayOfWeekStartIndexZero    = true;
-        private boolean use24HourTimeFormat        = false;
+        private boolean verbose                    = true;
+        private boolean dayOfWeekStartIndexZero    = false;
+        private boolean use24HourTimeFormat        = true;
         private Locale  locale                     = Locale.getDefault();
 
         //endregion
@@ -341,9 +341,15 @@ public class ExpressionParser {
 
         // Loop through all parts and apply global normalization
         for (int i = 0; i < parsed.length; i++) {
-            // convert all '*/1' to '*'
+            // Convert all '*/1' to '*'
             if (parsed[i].equals("*/1")) {
                 parsed[i] = "*";
+            }
+
+            // Convert non specified ranges to "/N" -> "*/N"
+            final String[] parts = parsed[i].split("/");
+            if (parts.length > 1 && parts[0].isEmpty()) {
+                parsed[i] = "*" + "/" + parts[1];
             }
 
             // Convert Month,DOW,Year step values with a starting value (i.e. not '*') to between expressions.
