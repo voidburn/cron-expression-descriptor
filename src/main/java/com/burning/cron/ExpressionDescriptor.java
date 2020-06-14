@@ -370,15 +370,17 @@ public class ExpressionDescriptor {
             description = getSegmentDescription(expressionParts[5],
                                                 getString("ComaEveryDay"),
                                                 desc -> {
-                                                    // Drop everything past # (included) if the expression is specifying a DOM
-                                                    String exp = desc.contains("#") ? desc.substring(0, desc.indexOf("#")) : desc;
-
-                                                    // Remove "Last" if specified
-                                                    if (exp.contains("L")) {
-                                                        exp = exp.replace("L", "");
+                                                    // Drop "Last" identifier (L) if specified
+                                                    if (desc.contains("L")) {
+                                                        desc = desc.replace("L", "");
                                                     }
 
-                                                    final int dayNum = Integer.parseInt(exp);
+                                                    // Drop "day occurrence" identifier (#) if specified. Only retain the week-day's number.
+                                                    if (desc.contains("#")) {
+                                                        desc = desc.substring(0, desc.indexOf("#"));
+                                                    }
+
+                                                    final int dayNum = Integer.parseInt(desc);
 
                                                     return getString(Day.values()[dayNum].name());
                                                 },
