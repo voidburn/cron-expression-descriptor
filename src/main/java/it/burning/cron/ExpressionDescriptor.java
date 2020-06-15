@@ -1,9 +1,9 @@
-package com.burning.cron;
+package it.burning.cron;
 
-import com.burning.cron.ExpressionParser.Day;
-import com.burning.cron.ExpressionParser.Month;
-import com.burning.cron.ExpressionParser.Options;
-import com.burning.utils.RxReplace;
+import it.burning.cron.ExpressionParser.Day;
+import it.burning.cron.ExpressionParser.Month;
+import it.burning.cron.ExpressionParser.Options;
+import it.burning.utils.RxReplace;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.burning.cron.ExpressionDescriptor.DescriptionType.FULL;
+import static it.burning.cron.ExpressionDescriptor.DescriptionType.FULL;
 
 public class ExpressionDescriptor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

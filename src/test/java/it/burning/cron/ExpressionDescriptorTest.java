@@ -1,6 +1,6 @@
-package com.burning.cron;
+package it.burning.cron;
 
-import com.burning.cron.ExpressionParser.Options;
+import it.burning.cron.ExpressionParser.Options;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;

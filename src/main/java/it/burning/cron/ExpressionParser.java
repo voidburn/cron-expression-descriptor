@@ -1,6 +1,6 @@
-package com.burning.cron;
+package it.burning.cron;
 
-import com.burning.utils.RxReplace;
+import it.burning.utils.RxReplace;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.burning.utils;
+package it.burning.utils;
 
 import org.junit.jupiter.api.Test;
 

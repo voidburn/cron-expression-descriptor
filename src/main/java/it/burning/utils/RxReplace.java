@@ -1,4 +1,4 @@
-package com.burning.utils;
+package it.burning.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
