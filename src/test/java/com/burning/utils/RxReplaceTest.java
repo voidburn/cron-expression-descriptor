@@ -16,6 +16,6 @@ class RxReplaceTest {
 
     @Test
     void rewrite() {
-        assertEquals("3 6 9 12", tripler.rewrite("1 2 3 4"), "All entries in the string have been tripled by their integer value");
+        assertEquals("3 6 9 12", tripler.replace("1 2 3 4"), "All entries in the string have been tripled by their integer value");
     }
 }

@@ -52,7 +52,7 @@ public abstract class RxReplace {
      * @param original
      * @return
      */
-    public String rewrite(final CharSequence original) {
+    public String replace(final CharSequence original) {
         // Get a matcher for the original pattern
         this.matcher = pattern.matcher(original);
 

@@ -18,15 +18,15 @@ public class ExpressionDescriptor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //region FIELDS
 
-    // Constants
-    private static final String MISSING_RESOURCE_VALUE = "";
-    private static final String LOCALIZATION_BUNDLE    = "localization";
-
     // Functional implementations
     @FunctionalInterface
-    public interface GetDescription {
+    private interface GetDescription {
         String getFor(String description);
     }
+
+    // Constants
+    private static final String EMPTY_STRING        = "";
+    private static final String LOCALIZATION_BUNDLE = "localization";
 
     // Patterns
     private final Pattern   specialCharactersSearchPattern       = Pattern.compile("[/\\-,*]");
@@ -706,7 +706,7 @@ public class ExpressionDescriptor {
             description = description.replace(getString("ComaEveryHour"), "");
             description = description.replace(getString("ComaEveryDay"), "");
 
-            description = stripDescription.rewrite(description);
+            description = stripDescription.replace(description);
         }
 
         return description;
@@ -719,10 +719,22 @@ public class ExpressionDescriptor {
      * @return The localized string
      */
     protected String getString(final String resourceName) {
+        return getString(resourceName, true);
+    }
+
+    /**
+     * Gets a localized String resource, optionally returns an empty string or the requested
+     * resource name if the resource is not found within the localzation packages
+     *
+     * @param resourceName
+     * @param emptyIfNotFound
+     * @return
+     */
+    protected String getString(final String resourceName, final boolean emptyIfNotFound) {
         try {
             return localization.getString(resourceName);
         } catch (MissingResourceException e) {
-            return MISSING_RESOURCE_VALUE;
+            return emptyIfNotFound ? EMPTY_STRING : "{" + resourceName + "}";
         }
     }
 
@@ -742,13 +754,6 @@ public class ExpressionDescriptor {
         return getDescription(expression, new Options());
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="expression"></param>
-    /// <param name="options"></param>
-    /// <returns>The cron expression description</returns>
-
     /**
      * Generates a human readable String for the Cron Expression
      *
@@ -757,9 +762,7 @@ public class ExpressionDescriptor {
      * @return The requested expression's description
      */
     public static String getDescription(final String expression, final Options options) {
-        final ExpressionDescriptor descripter = new ExpressionDescriptor(expression, options);
-
-        return descripter.getDescription(FULL);
+        return new ExpressionDescriptor(expression, options).getDescription(FULL);
     }
 
     //endregion

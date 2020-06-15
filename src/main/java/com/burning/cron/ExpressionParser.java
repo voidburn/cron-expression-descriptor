@@ -32,7 +32,7 @@ public class ExpressionParser {
     private final Pattern   rangeTokenSearchPattern = Pattern.compile("[*/]");
     private final Pattern   stepValueSearchPattern  = Pattern.compile("[*\\-,]");
     private final Pattern   singleItemTokenPattern  = Pattern.compile("^[0-9]+$");
-    private final RxReplace dowRewriter             = new RxReplace("(^\\d)|([^#/\\s]\\d)") {
+    private final RxReplace dowReplacer             = new RxReplace("(^\\d)|([^#/\\s]\\d)") {
         @Override
         public String replacement() {
             // Skip anything preceeding by # or /
@@ -296,7 +296,7 @@ public class ExpressionParser {
         }
 
         // Adjust DOW based on dayOfWeekStartIndexZero option
-        parsed[5] = dowRewriter.rewrite(parsed[5]);
+        parsed[5] = dowReplacer.replace(parsed[5]);
 
         // Convert DOM '?' to '*'
         if (parsed[3].equals("?")) {
