@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Module data
 group 'it.burning'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Build dependencies
@@ -85,7 +85,7 @@ publishing {
     repositories {
         maven {
             name = "OSSRH"
-            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_PASSWORD")
