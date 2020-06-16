@@ -84,6 +84,8 @@ public class ExpressionDescriptor {
 
     /**
      * Constructor (default system locale)
+     *
+     * @param expression The complete cron expression
      */
     public ExpressionDescriptor(final String expression) {
         this(expression, defaultOptions);
@@ -171,7 +173,7 @@ public class ExpressionDescriptor {
     /**
      * Generates the FULL description
      *
-     * @return
+     * @return FULL description
      */
     protected String getFullDescription() {
         String description;
@@ -255,7 +257,7 @@ public class ExpressionDescriptor {
     /**
      * Generates a description for only the SECONDS portion of the expression
      *
-     * @return
+     * @return The SECONDS description
      */
     protected String GetSecondsDescription() {
         return getSegmentDescription(expressionParts[0],
@@ -428,7 +430,7 @@ public class ExpressionDescriptor {
     /**
      * Generates a description for only the MONTH portion of the expression
      *
-     * @return
+     * @return The MONTH description
      */
     protected String GetMonthDescription() {
         return getSegmentDescription(expressionParts[4],
@@ -551,19 +553,19 @@ public class ExpressionDescriptor {
      * <p>
      * Range expressions used the 'ComaX0ThroughX1' resource
      * However Romanian language has different idioms for
-     * 1. 'from number to number' (minutes, seconds, hours, days) => ComaMinX0ThroughMinX1 optional resource
-     * 2. 'from month to month' ComaMonthX0ThroughMonthX1 optional resource
-     * 3. 'from year to year' => ComaYearX0ThroughYearX1 optional resource
+     * 1. 'from number to number' (minutes, seconds, hours, days) -- ComaMinX0ThroughMinX1 optional resource
+     * 2. 'from month to month' -- ComaMonthX0ThroughMonthX1 optional resource
+     * 3. 'from year to year' -- ComaYearX0ThroughYearX1 optional resource
      * therefore the {@code getRangeFormat} parameter was introduced
      *
-     * @param expression
-     * @param allDescription
+     * @param expression                   The expression
+     * @param allDescription               The complete description
      * @param getSingleItemDescription     Functional implementation
      * @param getIntervalDescriptionFormat Functional implementation
      * @param getBetweenDescriptionFormat  Functional implementation
      * @param getDescriptionFormat         Functional implementation
      * @param getRangeFormat               Functional implementation that formats range expressions depending on cron parts
-     * @return
+     * @return The generated description segment
      */
     protected String getSegmentDescription(final String expression, final String allDescription, final GetDescription getSingleItemDescription, final GetDescription getIntervalDescriptionFormat, final GetDescription getBetweenDescriptionFormat, final GetDescription getDescriptionFormat, final GetDescription getRangeFormat) {
         String description = null;
@@ -631,9 +633,9 @@ public class ExpressionDescriptor {
     /**
      * Generates the between segment description
      *
-     * @param betweenExpression
-     * @param getBetweenDescriptionFormat
-     * @param getSingleItemDescription
+     * @param betweenExpression Between range expression
+     * @param getBetweenDescriptionFormat Functional implementation
+     * @param getSingleItemDescription Functional implementation
      * @return The between segment description
      */
     protected String GenerateBetweenSegmentDescription(final String betweenExpression, final GetDescription getBetweenDescriptionFormat, final GetDescription getSingleItemDescription) {
@@ -720,7 +722,7 @@ public class ExpressionDescriptor {
     /**
      * Gets a localized String resource
      *
-     * @param resourceName
+     * @param resourceName The name of the resource String to retrieve
      * @return The localized string
      */
     protected String getString(final String resourceName) {
@@ -731,9 +733,9 @@ public class ExpressionDescriptor {
      * Gets a localized String resource, optionally returns an empty string or the requested
      * resource name if the resource is not found within the localzation packages
      *
-     * @param resourceName
-     * @param emptyIfNotFound
-     * @return
+     * @param resourceName The name of the resource String to retrieve
+     * @param emptyIfNotFound True to return an empty string if the resource wasn't found
+     * @return The resource value
      */
     protected String getString(final String resourceName, final boolean emptyIfNotFound) {
         try {

@@ -19,7 +19,7 @@ public abstract class RxReplace {
     /**
      * Constructor
      *
-     * @param regex
+     * @param regex The regular expression to use for replacement
      */
     public RxReplace(final String regex) {
         this.pattern = Pattern.compile(regex);
@@ -33,14 +33,16 @@ public abstract class RxReplace {
 
     /**
      * Overridden to compute a replacement for each match. Use the method 'group' to access the captured groups.
+     *
+     * @return String The replaced string
      */
     public abstract String replacement();
 
     /**
      * Returns the input subsequence captured by the given group during the previous match operation.
      *
-     * @param i
-     * @return
+     * @param i The group index (starting at 0)
+     * @return The contents of the requested group
      */
     public String group(int i) {
         return matcher.group(i);
@@ -49,8 +51,8 @@ public abstract class RxReplace {
     /**
      * Returns the result of rewriting 'original' by invoking the method 'replacement' for each match of the regular expression supplied to the constructor
      *
-     * @param original
-     * @return
+     * @param original The original string
+     * @return The rewritten string after replacements
      */
     public String replace(final CharSequence original) {
         // Get a matcher for the original pattern

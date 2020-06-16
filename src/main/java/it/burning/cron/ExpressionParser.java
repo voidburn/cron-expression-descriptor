@@ -180,7 +180,7 @@ public class ExpressionParser {
     /**
      * Constructor (Init with default options)
      *
-     * @param expression
+     * @param expression The complete cron expression
      */
     public ExpressionParser(final String expression) {
         this(expression, null);
@@ -189,7 +189,7 @@ public class ExpressionParser {
     /**
      * Constructor
      *
-     * @param expression The cron expression string
+     * @param expression The complete cron expression
      * @param options    Parsing options (null for defaults)
      */
     public ExpressionParser(final String expression, final Options options) {

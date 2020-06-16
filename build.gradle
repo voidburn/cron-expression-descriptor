@@ -39,9 +39,22 @@ idea {
     }
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources"
+        }
+    }
+}
+
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,6 +135,12 @@ publishing {
                         name = 'Luca Vignaroli'
                         email = 'luca@burning.it'
                     }
+                }
+
+                scm {
+                    connection = 'https://github.com/voidburn/cron-expression-descriptor.git'
+                    developerConnection = 'https://github.com/voidburn/cron-expression-descriptor.git'
+                    url = 'https://github.com/voidburn/cron-expression-descriptor'
                 }
             }
         }
