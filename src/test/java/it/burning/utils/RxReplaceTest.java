@@ -8,9 +8,7 @@ class RxReplaceTest {
     // Define replacement function
     final RxReplace tripler = new RxReplace("(\\d{1,2})") {
         public String replacement() {
-            int intValue = Integer.parseInt(group(1));
-
-            return String.valueOf(intValue * 3);
+            return String.valueOf(Integer.parseInt(group(0)) * 3);
         }
     };
 

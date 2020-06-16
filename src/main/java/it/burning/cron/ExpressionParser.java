@@ -146,6 +146,10 @@ public class ExpressionParser {
             return locale;
         }
 
+        public void setLocale(String language) {
+            setLocale((language != null && language.length() == 2) ? new Locale(language) : Locale.getDefault());
+        }
+
         public void setLocale(Locale locale) {
             this.locale = locale;
         }

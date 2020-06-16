@@ -57,13 +57,14 @@ public class ExpressionDescriptor {
     }
 
     // State
-    private final String         expression;
-    private       String[]       expressionParts;
-    private final Locale         locale;
-    private final ResourceBundle localization;
-    private       boolean        parsed;
-    private final Options        options;
-    private final boolean        use24HourTimeFormat;
+    private final        String         expression;
+    private              String[]       expressionParts;
+    private final        Locale         locale;
+    private final        ResourceBundle localization;
+    private              boolean        parsed;
+    private final        Options        options;
+    private final        boolean        use24HourTimeFormat;
+    private static final Options        defaultOptions = new Options();
 
     //endregion
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -751,7 +752,7 @@ public class ExpressionDescriptor {
      * @return The cron expression description
      */
     public static String getDescription(final String expression) {
-        return getDescription(expression, new Options());
+        return getDescription(expression, defaultOptions);
     }
 
     /**
@@ -763,6 +764,15 @@ public class ExpressionDescriptor {
      */
     public static String getDescription(final String expression, final Options options) {
         return new ExpressionDescriptor(expression, options).getDescription(FULL);
+    }
+
+    /**
+     * Set the default locale to be used
+     *
+     * @param language The language identifier string for the desired locale: "en", "it", etc..
+     */
+    public static void setDefaultLocale(final String language) {
+        defaultOptions.setLocale(language);
     }
 
     //endregion
