@@ -58,10 +58,10 @@ public abstract class RxReplace {
 
         final StringBuffer result = new StringBuffer(original.length());
         while (matcher.find()) {
-            // Load the next match into our buffer without altering it
+            // Discard everything up until the current match (we just want to update the matcher's cursor)
             matcher.appendReplacement(result, "");
 
-            // Perform implemented replacement
+            // Perform implemented replacement and append the resulting string to the buffer
             result.append(replacement());
         }
 
