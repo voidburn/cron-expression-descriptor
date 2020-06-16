@@ -1,17 +1,17 @@
 # Cron Expression Descriptor
 A Java library that converts cron expressions into human readable descriptions. Adapted from original work by Brady Holt (https://github.com/bradymholt/cron-expression-descriptor)
 
-**Licensed under the [MIT](https://github.com/voidburn/cron-expression-descriptor/LICENSE) ** 
-
 ![Build](https://github.com/voidburn/cron-expression-descriptor/workflows/Build/badge.svg)
+
+## License
+Licensed under the [MIT](https://github.com/voidburn/cron-expression-descriptor/LICENSE) license 
 
 ## Features
 
  * Supports all cron expression special characters including * / , - ? L W, #
  * Supports 5, 6 (w/ seconds or year), or 7 (w/ seconds and year) part cron expressions
+ * Supports [Quartz Enterprise Scheduler](https://www.quartz-scheduler.net/) cron expressions
  * Localization support
- * Provides casing options (Sentence case, Title Case, lowercase, etc.)
- * Supports [Quartz Enterprise Scheduler .NET](https://www.quartz-scheduler.net/) cron expressions
  
  ## Options
  
