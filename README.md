@@ -3,7 +3,7 @@ A Java library that converts cron expressions into human readable descriptions. 
 
 **Licensed under the [MIT](https://github.com/voidburn/cron-expression-descriptor/LICENSE) ** 
 
-![CI](https://github.com/voidburn/cron-expression-descriptor/workflows/CI/badge.svg)
+![Build](https://github.com/voidburn/cron-expression-descriptor/workflows/Build/badge.svg)
 
 ## Features
 
