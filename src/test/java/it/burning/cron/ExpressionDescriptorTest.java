@@ -50,7 +50,7 @@ class ExpressionDescriptorTest {
                   () -> assertEquals("Ogni 5 minuti, tra le 14:00 e le 14:59, ogni giorno", ExpressionDescriptor.getDescription("0 0/5 14 * * ?")),
                   () -> assertEquals("Ogni 5 minuti, alle 14:00 e 18:00, ogni giorno", ExpressionDescriptor.getDescription("0 0/5 14,18 * * ?")),
                   () -> assertEquals("Ogni minuto tra le 14:00 e le 14:05, ogni giorno", ExpressionDescriptor.getDescription("0 0-5 14 * * ?")),
-                  () -> assertEquals("Al 10 e 44 minuto passata l'ora, alle 14:00, ogni giorno, solo il Mercoledì, solo in Marzo", ExpressionDescriptor.getDescription("0 10,44 14 ? 3 WED")),
+                  () -> assertEquals("Al minuto 10 e 44 passata l'ora, alle 14:00, ogni giorno, solo il Mercoledì, solo in Marzo", ExpressionDescriptor.getDescription("0 10,44 14 ? 3 WED")),
                   () -> assertEquals("Alle 10:15, ogni giorno, dal Lunedì al Venerdì", ExpressionDescriptor.getDescription("0 15 10 ? * MON-FRI")),
                   () -> assertEquals("Alle 10:15, il giorno 15 del mese", ExpressionDescriptor.getDescription("0 15 10 15 * ?")),
                   () -> assertEquals("Alle 10:15, l'ultimo giorno del mese", ExpressionDescriptor.getDescription("0 15 10 L * ?")),

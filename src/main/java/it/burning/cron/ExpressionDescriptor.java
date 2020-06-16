@@ -72,6 +72,10 @@ public class ExpressionDescriptor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //region ACCESSORS
 
+    public Options getOptions() {
+        return options;
+    }
+
     //endregion
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -82,7 +86,7 @@ public class ExpressionDescriptor {
      * Constructor (default system locale)
      */
     public ExpressionDescriptor(final String expression) {
-        this(expression, new Options());
+        this(expression, defaultOptions);
     }
 
     /**
