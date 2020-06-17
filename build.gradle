@@ -160,8 +160,8 @@ publishing {
 }
 
 signing {
-    def signingKey = findProperty("burning_signing_key")
-    def signingPassword = findProperty("burning_signing_pass")
+    def signingKey = System.getenv("BURNING_GPG_KEY")
+    def signingPassword = System.getenv("BURNING_GPG_PASSPHRASE")
     useInMemoryPgpKeys(signingKey, signingPassword)
 
     sign publishing.publications.mavenJava
