@@ -1,2 +1,4 @@
 /.gradle/
 /build
+Resx.java
+*.resx
