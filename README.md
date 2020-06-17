@@ -13,6 +13,26 @@ Licensed under the [MIT](https://github.com/voidburn/cron-expression-descriptor/
  * Supports [Quartz Enterprise Scheduler](https://www.quartz-scheduler.net/) cron expressions
  * Localization with support for 22 languages
  
+## Add it to your project!
+
+### Maven
+Add the following dependency to your pom.xml:
+
+```
+<dependency>
+  <groupId>it.burning</groupId>
+  <artifactId>cron-expression-descriptor</artifactId>
+  <version>1.0</version>
+</dependency>
+```
+
+### Gradle
+Add the dependency to your gradle.build:
+
+```
+implementation 'it.burning:cron-expression-descriptor:1.0' 
+```
+ 
  ## Options
  
  A `ExpressionDescriptor.Options` object can be passed to `getDescription()`.  The following options are available:
