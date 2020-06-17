@@ -1,8 +1,8 @@
 package it.burning.cron;
 
-import it.burning.cron.ExpressionParser.Day;
-import it.burning.cron.ExpressionParser.Month;
-import it.burning.cron.ExpressionParser.Options;
+import it.burning.cron.CronExpressionParser.Day;
+import it.burning.cron.CronExpressionParser.Month;
+import it.burning.cron.CronExpressionParser.Options;
 import it.burning.utils.RxReplace;
 
 import java.util.Calendar;
@@ -12,9 +12,9 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static it.burning.cron.ExpressionDescriptor.DescriptionType.FULL;
+import static it.burning.cron.CronExpressionDescriptor.DescriptionType.FULL;
 
-public class ExpressionDescriptor {
+public class CronExpressionDescriptor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //region FIELDS
 
@@ -87,7 +87,7 @@ public class ExpressionDescriptor {
      *
      * @param expression The complete cron expression
      */
-    public ExpressionDescriptor(final String expression) {
+    public CronExpressionDescriptor(final String expression) {
         this(expression, defaultOptions);
     }
 
@@ -97,7 +97,7 @@ public class ExpressionDescriptor {
      * @param expression The cron expression to describe
      * @param options    The options to use when parsing the expression
      */
-    public ExpressionDescriptor(final String expression, final Options options) {
+    public CronExpressionDescriptor(final String expression, final Options options) {
         this.expression = expression;
         this.locale = options.getLocale();
         this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale);
@@ -122,7 +122,7 @@ public class ExpressionDescriptor {
         String description;
         try {
             if (!parsed) {
-                final ExpressionParser parser = new ExpressionParser(expression, options);
+                final CronExpressionParser parser = new CronExpressionParser(expression, options);
                 expressionParts = parser.parse();
                 parsed = true;
             }
@@ -769,7 +769,7 @@ public class ExpressionDescriptor {
      * @return The requested expression's description
      */
     public static String getDescription(final String expression, final Options options) {
-        return new ExpressionDescriptor(expression, options).getDescription(FULL);
+        return new CronExpressionDescriptor(expression, options).getDescription(FULL);
     }
 
     /**

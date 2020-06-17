@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ExpressionParserTest {
-    final ExpressionParser parser = new ExpressionParser("5 */3 9 2 DEC,JAN,MAR MON,WED 2020");
+class CronExpressionParserTest {
+    final CronExpressionParser parser = new CronExpressionParser("5 */3 9 2 DEC,JAN,MAR MON,WED 2020");
 
     @Test
     void parse() {

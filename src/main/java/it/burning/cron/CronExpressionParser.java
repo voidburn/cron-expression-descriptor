@@ -23,7 +23,7 @@ Cron reference (Quartz)
 * * * ? * * * command to execute
 
 */
-public class ExpressionParser {
+public class CronExpressionParser {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //region FIELDS
 
@@ -182,7 +182,7 @@ public class ExpressionParser {
      *
      * @param expression The complete cron expression
      */
-    public ExpressionParser(final String expression) {
+    public CronExpressionParser(final String expression) {
         this(expression, null);
     }
 
@@ -192,7 +192,7 @@ public class ExpressionParser {
      * @param expression The complete cron expression
      * @param options    Parsing options (null for defaults)
      */
-    public ExpressionParser(final String expression, final Options options) {
+    public CronExpressionParser(final String expression, final Options options) {
         this.expression = expression;
         this.options = options != null ? options : new Options();
     }

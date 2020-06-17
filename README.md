@@ -11,7 +11,7 @@ Licensed under the [MIT](https://github.com/voidburn/cron-expression-descriptor/
  * Supports all cron expression special characters including * / , - ? L W, #
  * Supports 5, 6 (w/ seconds or year), or 7 (w/ seconds and year) part cron expressions
  * Supports [Quartz Enterprise Scheduler](https://www.quartz-scheduler.net/) cron expressions
- * Localization support
+ * Localization with support for 22 languages
  
  ## Options
  
@@ -45,9 +45,29 @@ ExpressionDescriptor.getDescription("0 0 12 * * ?", new Options() {{
  ## i18n
  
  The following language translations are available.
- 
+  
   * English - en ([Brady Holt](https://github.com/bradymholt))
+  * Chinese Simplified - zh-Hans (zh-CN) ([Star Peng](https://github.com/starpeng))
+  * Chinese Traditional - zh-Hant (zh-TW) ([Ricky Chiang](https://github.com/metavige))
+  * Danish - da ([Rasmus Melchior Jacobsen](https://github.com/rmja))
+  * Dutch - nl ([TotalMace](https://github.com/TotalMace))
+  * Finnish - fi ([Mikael Rosenberg](https://github.com/MR77FI))
+  * French - fr ([Arnaud TAMAILLON](https://github.com/Greybird))
+  * German - de ([Michael Schuler](https://github.com/mschuler))
   * Italian - it ([Luca Vignaroli](https://github.com/voidburn))
+  * Japanese - ja ([Alin Sarivan](https://github.com/asarivan))
+  * Korean - ko ([Ion Mincu](https://github.com/ionmincu))
+  * Norwegian - nb ([Siarhei Khalipski](https://github.com/KhalipskiSiarhei))
+  * Polish - pl ([foka](https://github.com/foka))
+  * Portuguese (Brazil) - pt-BR ([Renato Lima](https://github.com/natenho))
+  * Romanian - ro ([Illegitimis](https://github.com/illegitimis))
+  * Russian - ru ([LbISS](https://github.com/LbISS))
+  * Slovenian - sl-SI ([Jani Bevk](https://github.com/jenzy))
+  * Spanish - es ([Ivan Santos](https://github.com/ivansg))
+  * Spanish (Mexico) - es-MX ([Ion Mincu](https://github.com/ionmincu))
+  * Swedish - sv ([roobin](https://github.com/roobin))
+  * Turkish - tr ([Mustafa SADEDİL](https://github.com/sadedil))
+  * Ukrainian - uk ([Taras](https://github.com/tbudurovych))
   
  If you want to manually set a default Locale for the descripion, to be used for all subsequent calls to "getDescription()" you can use the static method "setDefaultLocale()" by passing it the language identifier:
  
