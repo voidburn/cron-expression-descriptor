@@ -1,9 +1,4 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Module data
-group 'it.burning'
-version '1.0'
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Build dependencies
 buildscript {
     // Extra properties (valid for all projects if defined here)
@@ -29,6 +24,10 @@ apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+group "it.burning"
+version '1.0'
 
 idea {
     module {
@@ -50,6 +49,12 @@ sourceSets {
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
 }
 
 java {
@@ -94,6 +99,7 @@ test {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Publishing
+
 publishing {
     repositories {
         maven {
@@ -111,11 +117,17 @@ publishing {
 
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'it.burning'
             artifactId = 'cron-expression-descriptor'
-            version = '1.0'
-
             from components.java
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
 
             pom {
                 name = 'Cron Expression Descriptor'
@@ -138,11 +150,19 @@ publishing {
                 }
 
                 scm {
-                    connection = 'https://github.com/voidburn/cron-expression-descriptor.git'
-                    developerConnection = 'https://github.com/voidburn/cron-expression-descriptor.git'
+                    connection = 'scm:git:https://github.com/voidburn/cron-expression-descriptor.git'
+                    developerConnection = 'scm:git:https://github.com/voidburn/cron-expression-descriptor.git'
                     url = 'https://github.com/voidburn/cron-expression-descriptor'
                 }
             }
         }
     }
+}
+
+signing {
+    def signingKey = findProperty("burning_signing_key")
+    def signingPassword = findProperty("burning_signing_pass")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+
+    sign publishing.publications.mavenJava
 }

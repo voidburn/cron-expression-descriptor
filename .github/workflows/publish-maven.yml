@@ -16,3 +16,5 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          ORG_GRADLE_PROJECT_burning_signing_key: ${{ secrets.OSSRH_BURNING_IT_GPG_SECRET_KEY }}
+          ORG_GRADLE_PROJECT_burning_signing_pass: ${{ secrets.OSSRH_BURNING_IT_GPG_PASSPHRASE }}
