@@ -211,40 +211,35 @@ public class CronExpressionParser {
     public String[] parse() {
         // Initialize all elements of parsed array to empty strings
         final String[] parsed = new String[]{"", "", "", "", "", "", ""};
-
-        if (expression == null || expression.isEmpty()) {
-            throw new RuntimeException("Field 'expression' not found.");
-        } else {
-            // Tokenize expression and discard empty entries
-            final String[] tokenizedExpression = expression.split(" ");
-            final List<String> tmp = new ArrayList<>();
-            for (final String token : tokenizedExpression) {
-                if (!token.isEmpty()) {
-                    tmp.add(token);
-                }
+        final String[] tokenizedExpression = expression.split(" ");
+        final List<String> tmp = new ArrayList<>();
+        for (final String token : tokenizedExpression) {
+            if (!token.isEmpty()) {
+                tmp.add(token);
             }
-            final String[] expressionParts = new String[tmp.size()];
-            tmp.toArray(expressionParts);
+        }
 
-            // Inspect the expression parts
-            if (expressionParts.length < 5) {
-                throw new RuntimeException(String.format("Error: Expression only has %d parts.  At least 5 parts are required.", expressionParts.length));
-            } else if (expressionParts.length == 5) {
-                // 5 part cron so shift array past seconds element
-                System.arraycopy(expressionParts, 0, parsed, 1, 5);
-            } else if (expressionParts.length == 6) {
-                // If the last element is a "year" definition assume that the missing part is "second" (first token)
-                if (yearPattern.matcher(expressionParts[5]).matches()) {
-                    System.arraycopy(expressionParts, 0, parsed, 1, 6);
-                } else {
-                    System.arraycopy(expressionParts, 0, parsed, 0, 6);
-                }
-            } else if (expressionParts.length == 7) {
-                // All parts are in use
-                System.arraycopy(expressionParts, 0, parsed, 0, 7);
+        final String[] expressionParts = new String[tmp.size()];
+        tmp.toArray(expressionParts);
+
+        // Inspect the expression parts
+        if (expressionParts.length < 5) {
+            throw new RuntimeException(String.format("Error: Expression only has %d parts.  At least 5 parts are required.", expressionParts.length));
+        } else if (expressionParts.length == 5) {
+            // 5 part cron so shift array past seconds element
+            System.arraycopy(expressionParts, 0, parsed, 1, 5);
+        } else if (expressionParts.length == 6) {
+            // If the last element is a "year" definition assume that the missing part is "second" (first token)
+            if (yearPattern.matcher(expressionParts[5]).matches()) {
+                System.arraycopy(expressionParts, 0, parsed, 1, 6);
             } else {
-                throw new RuntimeException(String.format("Error: Expression has too many parts (%d).  Expression must not have more than 7 parts.", expressionParts.length));
+                System.arraycopy(expressionParts, 0, parsed, 0, 6);
             }
+        } else if (expressionParts.length == 7) {
+            // All parts are in use
+            System.arraycopy(expressionParts, 0, parsed, 0, 7);
+        } else {
+            throw new RuntimeException(String.format("Error: Expression has too many parts (%d).  Expression must not have more than 7 parts.", expressionParts.length));
         }
 
         // Normalize the expression

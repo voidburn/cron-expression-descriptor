@@ -25,8 +25,9 @@ public class CronExpressionDescriptor {
     }
 
     // Constants
-    private static final String EMPTY_STRING        = "";
-    private static final String LOCALIZATION_BUNDLE = "localization";
+    private static final Options DEFAULT_OPTIONS     = new Options();
+    private static final String  EMPTY_STRING        = "";
+    private static final String  LOCALIZATION_BUNDLE = "localization";
 
     // Patterns
     private final Pattern   specialCharactersSearchPattern       = Pattern.compile("[/\\-,*]");
@@ -57,14 +58,13 @@ public class CronExpressionDescriptor {
     }
 
     // State
-    private final        String         expression;
-    private              String[]       expressionParts;
-    private final        Locale         locale;
-    private final        ResourceBundle localization;
-    private              boolean        parsed;
-    private final        Options        options;
-    private final        boolean        use24HourTimeFormat;
-    private static final Options        defaultOptions = new Options();
+    private String         expression;
+    private String[]       expressionParts;
+    private Locale         locale;
+    private ResourceBundle localization;
+    private boolean        parsed;
+    private Options        options;
+    private boolean        use24HourTimeFormat;
 
     //endregion
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,8 +72,32 @@ public class CronExpressionDescriptor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //region ACCESSORS
 
+    public void setOptions(final Options options) {
+        // Sanity checks
+        if (options == null) {
+            throw new RuntimeException("Options cannot be null");
+        }
+
+        this.options = options;
+        this.use24HourTimeFormat = options.use24HourTimeFormat();
+        this.locale = options.getLocale();
+        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale);
+    }
+
     public Options getOptions() {
         return options;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public ResourceBundle getLocalization() {
+        return localization;
+    }
+
+    public boolean isUse24HourTimeFormat() {
+        return use24HourTimeFormat;
     }
 
     //endregion
@@ -83,12 +107,19 @@ public class CronExpressionDescriptor {
     //region CONSTRUCTORS
 
     /**
+     * Empty constructor
+     */
+    public CronExpressionDescriptor() {
+
+    }
+
+    /**
      * Constructor (default system locale)
      *
      * @param expression The complete cron expression
      */
     public CronExpressionDescriptor(final String expression) {
-        this(expression, defaultOptions);
+        this(expression, DEFAULT_OPTIONS);
     }
 
     /**
@@ -98,12 +129,17 @@ public class CronExpressionDescriptor {
      * @param options    The options to use when parsing the expression
      */
     public CronExpressionDescriptor(final String expression, final Options options) {
-        this.expression = expression;
-        this.locale = options.getLocale();
-        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale);
+        // Sanity checks
+        if (expression == null || expression.isEmpty()) {
+            throw new IllegalArgumentException("The expression to be described cannot be null or empty");
+        }
+
         this.parsed = false;
+        this.expression = expression;
         this.options = options;
         this.use24HourTimeFormat = options.use24HourTimeFormat();
+        this.locale = options.getLocale();
+        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale);
     }
 
     //endregion
@@ -113,12 +149,61 @@ public class CronExpressionDescriptor {
     //region METHODS
 
     /**
+     * Set the expression that this instance will process next time the {@link #getDescription(DescriptionType)} is
+     * called. Default options will be used.
+     *
+     * @param expression
+     */
+    public void setExpression(final String expression) {
+        setExpression(expression, DEFAULT_OPTIONS);
+    }
+
+    /**
+     * Set the expression and options that this instance will process next time the {@link #getDescription(DescriptionType)} is
+     * called.
+     *
+     * @param expression The new expression to describe
+     * @param options    The options to use
+     */
+    public void setExpression(final String expression, final Options options) {
+        // Sanity checks
+        if (expression == null || expression.isEmpty()) {
+            throw new IllegalArgumentException("The expression to be described cannot be null or empty");
+        }
+
+        if (options == null) {
+            throw new IllegalArgumentException("Options cannot be null when setting a new expression");
+        }
+
+        this.parsed = false;
+        this.expression = expression;
+        this.options = options;
+        this.use24HourTimeFormat = options.use24HourTimeFormat();
+        this.locale = options.getLocale();
+        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale);
+    }
+
+    /**
+     * Get the full description for the currently configured expression and options
+     *
+     * @return The cron expression description
+     */
+    public String getDescription() {
+        return getDescription(FULL);
+    }
+
+    /**
      * Generates a human readable String for the Cron Expression
      *
      * @param type Which part(s) of the expression to describe
      * @return The cron expression description
      */
     public String getDescription(final DescriptionType type) {
+        // Sanity checks (required for the empty constructor)
+        if (expression == null || expression.isEmpty() || options == null) {
+            throw new IllegalArgumentException("The expression to parse and the options to use cannot be null or empty");
+        }
+
         String description;
         try {
             if (!parsed) {
@@ -633,9 +718,9 @@ public class CronExpressionDescriptor {
     /**
      * Generates the between segment description
      *
-     * @param betweenExpression Between range expression
+     * @param betweenExpression           Between range expression
      * @param getBetweenDescriptionFormat Functional implementation
-     * @param getSingleItemDescription Functional implementation
+     * @param getSingleItemDescription    Functional implementation
      * @return The between segment description
      */
     protected String GenerateBetweenSegmentDescription(final String betweenExpression, final GetDescription getBetweenDescriptionFormat, final GetDescription getSingleItemDescription) {
@@ -733,7 +818,7 @@ public class CronExpressionDescriptor {
      * Gets a localized String resource, optionally returns an empty string or the requested
      * resource name if the resource is not found within the localzation packages
      *
-     * @param resourceName The name of the resource String to retrieve
+     * @param resourceName    The name of the resource String to retrieve
      * @param emptyIfNotFound True to return an empty string if the resource wasn't found
      * @return The resource value
      */
@@ -758,7 +843,7 @@ public class CronExpressionDescriptor {
      * @return The cron expression description
      */
     public static String getDescription(final String expression) {
-        return getDescription(expression, defaultOptions);
+        return getDescription(expression, DEFAULT_OPTIONS);
     }
 
     /**
@@ -778,7 +863,7 @@ public class CronExpressionDescriptor {
      * @param language The language identifier string for the desired locale: "en", "it", etc..
      */
     public static void setDefaultLocale(final String language) {
-        defaultOptions.setLocale(language);
+        DEFAULT_OPTIONS.setLocale(language);
     }
 
     //endregion
