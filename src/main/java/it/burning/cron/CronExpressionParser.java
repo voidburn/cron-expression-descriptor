@@ -224,7 +224,9 @@ public class CronExpressionParser {
 
         // Inspect the expression parts
         if (expressionParts.length < 5) {
-            throw new RuntimeException(String.format("Error: Expression only has %d parts.  At least 5 parts are required.", expressionParts.length));
+            if (options.throwExceptionOnParseError) {
+                throw new RuntimeException(String.format("The cron expression \"%s\" only has [%d] parts. At least 5 parts are required.", expression, expressionParts.length));
+            }
         } else if (expressionParts.length == 5) {
             // 5 part cron so shift array past seconds element
             System.arraycopy(expressionParts, 0, parsed, 1, 5);
@@ -239,7 +241,9 @@ public class CronExpressionParser {
             // All parts are in use
             System.arraycopy(expressionParts, 0, parsed, 0, 7);
         } else {
-            throw new RuntimeException(String.format("Error: Expression has too many parts (%d).  Expression must not have more than 7 parts.", expressionParts.length));
+            if (options.throwExceptionOnParseError) {
+                throw new RuntimeException(String.format("The cron expression \"%s\" has too many parts [%d]. Expressions must not have more than 7 parts.", expression, expressionParts.length));
+            }
         }
 
         // Normalize the expression
