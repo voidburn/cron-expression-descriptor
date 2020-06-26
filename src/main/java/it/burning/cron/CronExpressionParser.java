@@ -27,6 +27,62 @@ public class CronExpressionParser {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //region FIELDS
 
+    // Validation patterns
+
+    // SECONDS and MINUTES in the range and frequencies 0-59
+    //
+    // ^(?:\\*|^0)$                                 -> Every step {0 or *}
+    // ^(?:[0-5]?[0-9])$                            -> Single value {0-59}
+    // ^(?:[0-5]?[0-9]/(?:[0-5]?[0-9]))$            -> Frequency range {0-59}/{0-59}
+    // ^(?:([0-5]?[0-9],)*)(?:(?!^)[0-5]?[0-9])$    -> Multiple values {0-59},{0-59},{0-59}...
+    // ^(?:[0-5]?[0-9])-(?:[0-5]?[0-9])$            -> Range {0-59}-{0-59}
+    private final Pattern secsAndMinsValidationPattern = Pattern.compile("^(?:\\*|^0)$|^(?:[0-5]?[0-9])$|^(?:[0-5]?[0-9]/(?:[0-5]?[0-9]))$|^(?:([0-5]?[0-9],)*)(?:(?!^)[0-5]?[0-9])$|^(?:[0-5]?[0-9])-(?:[0-5]?[0-9])$");
+
+    // HOURS in the range and frequencies 0-23
+    //
+    // ^(?:\\*|^0)$                                                                 -> Every step {0 or *}
+    // ^(?:[0-1]?[0-9]|2?[0-3])$                                                    -> Single value {0-23}
+    // ^(?:(?:[0-1]?[0-9]/)|(?:2[0-3]/))(?:(?:[0-1]?[0-9])|(?:2[0-3]))$             -> Frequency rage {0-23}/{0-23}
+    // ^(?:(?:[0-1]?[0-9],)|(?:2[0-3],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-3]))$  -> Multiple values {0-23},{0-23},{0-23},...
+    // ^(?:(?:[0-1]?[0-9])|(?:2[0-3]))-(?:(?:[0-1]?[0-9])|(?:2[0-3]))$              -> Range {0-23}-{0-23}
+    private final Pattern hoursPattern = Pattern.compile("^(?:\\*|^0)$|^(?:[0-1]?[0-9]|2?[0-3])$|^(?:(?:[0-1]?[0-9]/)|(?:2[0-3]/))(?:(?:[0-1]?[0-9])|(?:2[0-3]))$|^(?:(?:[0-1]?[0-9],)|(?:2[0-3],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-3]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-3]))-(?:(?:[0-1]?[0-9])|(?:2[0-3]))$");
+
+    // DAYS OF MONTH in the range and frequency 1-31
+    //
+    // ^(?:\*)$                                                                                                 -> Every step {*}
+    // ^(?:[1-9]|1[0-9]|2[0-9]|3[0-1])$                                                                         -> Single value {1-31}
+    // ^(?:[1-9]|1[0-9]|2[0-9]|3[0-1])/(?:[1-9]|1[0-9]|2[0-9]|3[0-1])$                                          -> Frequency rage {1-31}/{1-31}
+    // ^(?:(?:[0-1]?[0-9],)|(?:2[0-9],)|(?:3[0-1],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-9])|(?:(?!^)3[0-1]))$  -> Multiple values {1-31},{1-31},{0-23},...
+    // ^(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))-(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))$                    -> Range {1-31}-{1-31}
+    private final Pattern domValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-9]|1[0-9]|2[0-9]|3[0-1])$|^(?:[1-9]|1[0-9]|2[0-9]|3[0-1])/(?:[1-9]|1[0-9]|2[0-9]|3[0-1])$|^(?:(?:[0-1]?[0-9],)|(?:2[0-9],)|(?:3[0-1],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-9])|(?:(?!^)3[0-1]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))-(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))$");
+
+    // MONTHS in the range and frequencies 1-12
+    //
+    // ^(?:\*)$                                             -> Every step {*}
+    // ^(?:[1-9]|1[0-2])$                                   -> Single value {1-31}
+    // ^(?:[1-9]|1[0-2])/(?:[1-9]|1[0-2])$                  -> Frequency range {1-12}/{1-12}
+    // ^(?:[1-9],|1[0-2],)*(?:(?!^)[1-9]|(?!^)1[0-2])$      -> Multiple values {0-12},{0-12},{0-12}...
+    // ^(?:[1-9]|1[0-2])-(?:[1-9]|1[0-2])$                  -> Range {0-12}-{0-12}
+    private final Pattern monthsValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-9]|1[0-2])$|^(?:[1-9]|1[0-2])/(?:[1-9]|1[0-2])$|^(?:[1-9],|1[0-2],)*(?:(?!^)[1-9]|(?!^)1[0-2])$|^(?:[1-9]|1[0-2])-(?:[1-9]|1[0-2])$");
+
+    // DAY OF WEEK in the range 1-7
+    //
+    // ^(?:\*)$                     -> Every step {*}
+    // ^(?:[1-7])$                  -> Single value {1-7}
+    // ^(?:[1-7])/(?:[1-7])$        -> Frequency range {1-7}/{1-7}
+    // ^(?:[1-7],)*(?:(?!^)[1-7])$  -> Multiple values {1-7},{1-7},{1-7}...
+    // ^(?:[1-7])-(?:[1-7])$        -> Range {0-12}-{0-12}
+    private final Pattern dowValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-7])$|^(?:[1-7])/(?:[1-7])$|^(?:[1-7],)*(?:(?!^)[1-7])$|^(?:[1-7])-(?:[1-7])$");
+
+    // YEARS in the range 1970-2999
+    //
+    // ^(?:\*)$                     -> Every step {*}
+    // ^\d{4}$                      -> Single value {any 4 digit number}
+    // ^(?:\d{4})/(?:\d{1,3})$      -> Frequency range {any 4 digit number}/{any 3 digit number} (specific validity must be checked outside the match -> 1970-2099 / 1-129)
+    // ^(?:\d{4},)*(?:(?!^)\d{4})$  -> Multiple values {any 4 digit number},{any 4 digit number},{any 4 digit number}... (specific validity must be checked outside the match -> 1970-2099)
+    // ^(?:\d{4})-(?:\d{4})$        -> Range {any 4 digit number}-{any 4 digit number} (specific validity must be checked outside the match -> 1970-2099)
+    private final Pattern yearsValidationPattern = Pattern.compile("^(?:\\*)$|^\\d{4}$|^(?:\\d{4})/(?:\\d{1,3})$|^(?:\\d{4},)*(?:(?!^)\\d{4})$|^(?:\\d{4})-(?:\\d{4})$");
+
     // Pattern matching
     private final Pattern   yearPattern             = Pattern.compile(".*\\d{4}$");
     private final Pattern   rangeTokenSearchPattern = Pattern.compile("[*/]");
@@ -93,6 +149,14 @@ public class CronExpressionParser {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //region SUBCLASSES
 
+    // Parse exception
+    public static class CronExpressionParseException extends RuntimeException {
+        public CronExpressionParseException(final String message) {
+            super(message);
+        }
+    }
+
+    // Parse options
     public static class Options {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //region FIELDS
@@ -209,6 +273,7 @@ public class CronExpressionParser {
      * @return A 7 part string array, one part for each component of the cron expression (seconds, minutes, etc.)
      */
     public String[] parse() {
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Initialize all elements of parsed array to empty strings
         final String[] parsed = new String[]{"", "", "", "", "", "", ""};
         final String[] tokenizedExpression = expression.split(" ");
@@ -222,10 +287,11 @@ public class CronExpressionParser {
         final String[] expressionParts = new String[tmp.size()];
         tmp.toArray(expressionParts);
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Inspect the expression parts
         if (expressionParts.length < 5) {
             if (options.throwExceptionOnParseError) {
-                throw new RuntimeException(String.format("The cron expression \"%s\" only has [%d] parts. At least 5 parts are required.", expression, expressionParts.length));
+                throw new CronExpressionParseException(String.format("The cron expression \"%s\" only has [%d] parts. At least 5 parts are required.", expression, expressionParts.length));
             }
         } else if (expressionParts.length == 5) {
             // 5 part cron so shift array past seconds element
@@ -242,10 +308,15 @@ public class CronExpressionParser {
             System.arraycopy(expressionParts, 0, parsed, 0, 7);
         } else {
             if (options.throwExceptionOnParseError) {
-                throw new RuntimeException(String.format("The cron expression \"%s\" has too many parts [%d]. Expressions must not have more than 7 parts.", expression, expressionParts.length));
+                throw new CronExpressionParseException(String.format("The cron expression \"%s\" has too many parts [%d]. Expressions must not have more than 7 parts.", expression, expressionParts.length));
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Validate parts
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Normalize the expression
         normalizeExpression(parsed);
 

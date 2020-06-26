@@ -1,5 +1,6 @@
 package it.burning.cron;
 
+import it.burning.cron.CronExpressionParser.CronExpressionParseException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,10 +14,10 @@ class CronExpressionParserTest {
     @Test
     void parse() {
         // Test parse exceptions
-        final RuntimeException shortException = assertThrows(RuntimeException.class, parserShort::parse, "A cron expression with less than 5 parts should throw an exception");
+        final RuntimeException shortException = assertThrows(CronExpressionParseException.class, parserShort::parse, "A cron expression with less than 5 parts should throw an exception");
         assertEquals("The cron expression \"5 */3 9\" only has [3] parts. At least 5 parts are required.", shortException.getMessage());
 
-        final RuntimeException longException = assertThrows(RuntimeException.class, parserLong::parse, "A cron expression with more than 7 parts should throw an exception");
+        final RuntimeException longException = assertThrows(CronExpressionParseException.class, parserLong::parse, "A cron expression with more than 7 parts should throw an exception");
         assertEquals("The cron expression \"5 */3 9 2 DEC,JAN,MAR MON,WED 2020, 2\" has too many parts [8]. Expressions must not have more than 7 parts.", longException.getMessage());
 
         // Test valid parse
