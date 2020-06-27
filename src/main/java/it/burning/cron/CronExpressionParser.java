@@ -84,7 +84,7 @@ public class CronExpressionParser {
     // ^(?:[1-7])-(?:[1-7])$            -> Range {1-7}-{1-7}
     // ^(?:[1-7])-(?:[1-7])/(?:[0-7])$  -> Range AND Frequency {1-7}-{1-7}/{0-7}
     // ^(?:[1-7]L)$                     -> Last weekday of the month {1-7}L
-    // ^(?:[1-7]#[1-5])$                -> Weekday of the month {1-7}#{1-5}
+    // ^(?:[1-7]#[1-5])$                -> Nth Weekday of the month {1-7}#{1-5}
     private final Pattern dowValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-7])$|^(?:[1-7])/(?:[1-7])$|^(?:[1-7],)*(?:(?!^)[1-7])$|^(?:[1-7])-(?:[1-7])$|^(?:[1-7])-(?:[1-7])/(?:[0-7])$|^(?:[1-7]L)$|^(?:[1-7]#[1-5])$");
 
     // YEARS in the range 1970-2999
@@ -104,7 +104,7 @@ public class CronExpressionParser {
     private final RxReplace dowReplacer             = new RxReplace("(^\\d)|([^#/\\s]\\d)") {
         @Override
         public String replacement() {
-            // Skip anything preceeding by # or /
+            // Skip anything preceeded by # or /
             final String value = group(1) != null ? group(1) : group(2);
 
             // Extract digit part (i.e. if "-2" or ",2", just take 2)
