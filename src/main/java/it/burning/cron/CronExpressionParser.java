@@ -33,27 +33,27 @@ public class CronExpressionParser {
     //
     // ^(?:\\*|^0)$                                         -> Every step {0 or *}
     // ^(?:[0-5]?[0-9])$                                    -> Single value {0-59}
-    // ^(?:[0-5]?[0-9]/[0-5]?[0-9])$                        -> Frequency range {0-59}/{0-59}
+    // ^(?:(?:\\*|[0-5]?[0-9])/[0-5]?[0-9])$                -> Frequency range {* | 0-59}/{0-59} (expressions such as 0/2 are normalized to */2 so must be considered valid)
     // ^(?:([0-5]?[0-9],)*)(?:(?!^)[0-5]?[0-9])$            -> Multiple values {0-59},{0-59},{0-59}...
     // ^(?:[0-5]?[0-9])-(?:[0-5]?[0-9])$                    -> Range {0-59}-{0-59}
     // ^(?:[0-5]?[0-9])-(?:[0-5]?[0-9])/(?:[0-5]?[0-9])$    -> Range AND Frequency {0-59}-{0-59}/{0-59}
-    private final Pattern secsAndMinsValidationPattern = Pattern.compile("^(?:\\*|^0)$|^(?:[0-5]?[0-9])$|^(?:[0-5]?[0-9]/[0-5]?[0-9])$|^(?:([0-5]?[0-9],)*)(?:(?!^)[0-5]?[0-9])$|^(?:[0-5]?[0-9])-(?:[0-5]?[0-9])$|^(?:[0-5]?[0-9])-(?:[0-5]?[0-9])/(?:[0-5]?[0-9])$");
+    private final Pattern secsAndMinsValidationPattern = Pattern.compile("^(?:\\*|^0)$|^(?:[0-5]?[0-9])$|^(?:(?:\\*|[0-5]?[0-9])/[0-5]?[0-9])$|^(?:([0-5]?[0-9],)*)(?:(?!^)[0-5]?[0-9])$|^(?:[0-5]?[0-9])-(?:[0-5]?[0-9])$|^(?:[0-5]?[0-9])-(?:[0-5]?[0-9])/(?:[0-5]?[0-9])$");
 
     // HOURS in the range and frequencies 0-23
     //
     // ^(?:\\*|^0)$                                                                                     -> Every step {0 or *}
     // ^(?:[0-1]?[0-9]|2?[0-3])$                                                                        -> Single value {0-23}
-    // ^(?:(?:[0-1]?[0-9])|(?:2[0-3]))/(?:(?:[0-1]?[0-9])|(?:2[0-3]))$                                  -> Frequency rage {0-23}/{0-23}
+    // ^(?:(?:\\*|[0-1]?[0-9])|(?:2[0-3]))/(?:(?:[0-1]?[0-9])|(?:2[0-3]))$                              -> Frequency rage {* | 0-23}/{0-23} (expressions such as 0/2 are normalized to */2 so must be considered valid)
     // ^(?:(?:[0-1]?[0-9],)|(?:2[0-3],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-3]))$                      -> Multiple values {0-23},{0-23},{0-23},...
     // ^(?:(?:[0-1]?[0-9])|(?:2[0-3]))-(?:(?:[0-1]?[0-9])|(?:2[0-3]))$                                  -> Range {0-23}-{0-23}
     // ^(?:(?:[0-1]?[0-9])|(?:2[0-3]))-(?:(?:[0-1]?[0-9])|(?:2[0-3]))/(?:(?:[0-1]?[0-9])|(?:2[0-3]))$   -> Range AND Frequency {0-23}-{0-23}/{0-23}
-    private final Pattern hoursPattern = Pattern.compile("^(?:\\*|^0)$|^(?:[0-1]?[0-9]|2?[0-3])$|^(?:(?:[0-1]?[0-9]/)|(?:2[0-3]/))(?:(?:[0-1]?[0-9])|(?:2[0-3]))$|^(?:(?:[0-1]?[0-9],)|(?:2[0-3],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-3]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-3]))-(?:(?:[0-1]?[0-9])|(?:2[0-3]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-3]))-(?:(?:[0-1]?[0-9])|(?:2[0-3]))/(?:(?:[0-1]?[0-9])|(?:2[0-3]))$");
+    private final Pattern hoursPattern = Pattern.compile("^(?:\\*|^0)$|^(?:[0-1]?[0-9]|2?[0-3])$|^(?:(?:\\*|[0-1]?[0-9])|(?:2[0-3]))/(?:(?:[0-1]?[0-9])|(?:2[0-3]))$|^(?:(?:[0-1]?[0-9],)|(?:2[0-3],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-3]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-3]))-(?:(?:[0-1]?[0-9])|(?:2[0-3]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-3]))-(?:(?:[0-1]?[0-9])|(?:2[0-3]))/(?:(?:[0-1]?[0-9])|(?:2[0-3]))$");
 
     // DAYS OF MONTH in the range and frequency 1-31
     //
     // ^(?:\*)$                                                                                                             -> Every step {*}
     // ^(?:[1-9]|1[0-9]|2[0-9]|3[0-1])$                                                                                     -> Single value {1-31}
-    // ^(?:[1-9]|1[0-9]|2[0-9]|3[0-1])/(?:[0-9]|1[0-9]|2[0-9]|3[0-1])$                                                      -> Frequency rage {1-31}/{0-31}
+    // ^(?:\\*|[1-9]|1[0-9]|2[0-9]|3[0-1])/(?:[0-9]|1[0-9]|2[0-9]|3[0-1])$                                                  -> Frequency rage {* | 1-31}/{0-31} (expressions such as 1/31 are normalized to */31 so must be considered valid)
     // ^(?:(?:[0-1]?[0-9],)|(?:2[0-9],)|(?:3[0-1],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-9])|(?:(?!^)3[0-1]))$              -> Multiple values {1-31},{1-31},{1-31},...
     // ^(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))-(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))$                                -> Range {1-31}-{1-31}
     // ^(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))-(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))/(?:[0-9]|1[0-9]|2[0-9]|3[0-1])$ -> Range AND Frequency {1-31}-{1-31}/{0-31}
@@ -63,38 +63,38 @@ public class CronExpressionParser {
     //                                                                                                                            L-{1-30} Nth day befor the end of the month,
     //                                                                                                                            {1-31}W On the nearest day to the Nth of the month
     //                                                                                                                         }
-    private final Pattern domValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-9]|1[0-9]|2[0-9]|3[0-1])$|^(?:[1-9]|1[0-9]|2[0-9]|3[0-1])/(?:[0-9]|1[0-9]|2[0-9]|3[0-1])$|^(?:(?:[0-1]?[0-9],)|(?:2[0-9],)|(?:3[0-1],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-9])|(?:(?!^)3[0-1]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))-(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))-(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))/(?:[0-9]|1[0-9]|2[0-9]|3[0-1])$|^(?:(?:L)|(?:LW)|(?:L)-(?:[1-9]|1[0-9]|2[0-9]|30)|(?:(?:[1-9]|1[0-9]|2[0-9]|3[0-1])W))$");
+    private final Pattern domValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-9]|1[0-9]|2[0-9]|3[0-1])$|^(?:\\*|[1-9]|1[0-9]|2[0-9]|3[0-1])/(?:[0-9]|1[0-9]|2[0-9]|3[0-1])$|^(?:(?:[0-1]?[0-9],)|(?:2[0-9],)|(?:3[0-1],))*(?:(?:(?!^)[0-1]?[0-9])|(?:(?!^)2[0-9])|(?:(?!^)3[0-1]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))-(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))$|^(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))-(?:(?:[0-1]?[0-9])|(?:2[0-9])|(?:3[0-1]))/(?:[0-9]|1[0-9]|2[0-9]|3[0-1])$|^(?:(?:L)|(?:LW)|(?:L)-(?:[1-9]|1[0-9]|2[0-9]|30)|(?:(?:[1-9]|1[0-9]|2[0-9]|3[0-1])W))$");
 
     // MONTHS in the range and frequencies 1-12
     //
     // ^(?:\*)$                                             -> Every step {*}
     // ^(?:[1-9]|1[0-2])$                                   -> Single value {1-31}
-    // ^(?:[1-9]|1[0-2])/(?:[0-9]|1[0-2])$                  -> Frequency range {1-12}/{0-12}
+    // ^(?:\\*|[1-9]|1[0-2])/(?:[0-9]|1[0-2])$              -> Frequency range {* | 1-12}/{0-12} (expressions such as 1/12 are normalized to */12 so must be considered valid)
     // ^(?:[1-9],|1[0-2],)*(?:(?!^)[1-9]|(?!^)1[0-2])$      -> Multiple values {1-12},{1-12},{1-12}...
     // ^(?:[1-9]|1[0-2])-(?:[1-9]|1[0-2])$                  -> Range {1-12}-{1-12}
     // ^(?:[1-9]|1[0-2])-(?:[1-9]|1[0-2])/(?:[0-9]|1[0-2])$ -> Range AND Frequency {1-12}-{1-12}/{0-12}
-    private final Pattern monthsValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-9]|1[0-2])$|^(?:[1-9]|1[0-2])/(?:[0-9]|1[0-2])$|^(?:[1-9],|1[0-2],)*(?:(?!^)[1-9]|(?!^)1[0-2])$|^(?:[1-9]|1[0-2])-(?:[1-9]|1[0-2])$|^(?:[1-9]|1[0-2])-(?:[1-9]|1[0-2])/(?:[0-9]|1[0-2])$");
+    private final Pattern monthsValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-9]|1[0-2])$|^(?:\\*|[1-9]|1[0-2])/(?:[0-9]|1[0-2])$|^(?:[1-9],|1[0-2],)*(?:(?!^)[1-9]|(?!^)1[0-2])$|^(?:[1-9]|1[0-2])-(?:[1-9]|1[0-2])$|^(?:[1-9]|1[0-2])-(?:[1-9]|1[0-2])/(?:[0-9]|1[0-2])$");
 
     // DAY OF WEEK in the range 1-7
     //
     // ^(?:\*)$                         -> Every step {*}
     // ^(?:[1-7])$                      -> Single value {1-7}
-    // ^(?:[1-7])/(?:[1-7])$            -> Frequency range {1-7}/{1-7}
+    // ^(?:\\*|[1-7])/(?:[1-7])$        -> Frequency range {* | 1-7}/{1-7} (expressions such as 1/7 are normalized to */7 so must be considered valid)
     // ^(?:[1-7],)*(?:(?!^)[1-7])$      -> Multiple values {1-7},{1-7},{1-7}...
     // ^(?:[1-7])-(?:[1-7])$            -> Range {1-7}-{1-7}
     // ^(?:[1-7])-(?:[1-7])/(?:[0-7])$  -> Range AND Frequency {1-7}-{1-7}/{0-7}
     // ^(?:[1-7]L)$                     -> Last weekday of the month {1-7}L
     // ^(?:[1-7]#[1-5])$                -> Nth Weekday of the month {1-7}#{1-5}
-    private final Pattern dowValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-7])$|^(?:[1-7])/(?:[1-7])$|^(?:[1-7],)*(?:(?!^)[1-7])$|^(?:[1-7])-(?:[1-7])$|^(?:[1-7])-(?:[1-7])/(?:[0-7])$|^(?:[1-7]L)$|^(?:[1-7]#[1-5])$");
+    private final Pattern dowValidationPattern = Pattern.compile("^(?:\\*)$|^(?:[1-7])$|^(?:\\*|[1-7])/(?:[1-7])$|^(?:[1-7],)*(?:(?!^)[1-7])$|^(?:[1-7])-(?:[1-7])$|^(?:[1-7])-(?:[1-7])/(?:[0-7])$|^(?:[1-7]L)$|^(?:[1-7]#[1-5])$");
 
     // YEARS in the range 1970-2999
     //
-    // ^(?:\*)$                     -> Every step {*}
-    // ^\d{4}$                      -> Single value {any 4 digit number}
-    // ^(?:\d{4})/(?:\d{1,3})$      -> Frequency range {any 4 digit number}/{any 3 digit number} (specific validity must be checked outside the match -> 1970-2099 / 1-129)
-    // ^(?:\d{4},)*(?:(?!^)\d{4})$  -> Multiple values {any 4 digit number},{any 4 digit number},{any 4 digit number}... (specific validity must be checked outside the match -> 1970-2099)
-    // ^(?:\d{4})-(?:\d{4})$        -> Range {any 4 digit number}-{any 4 digit number} (specific validity must be checked outside the match -> 1970-2099)
-    private final Pattern yearsValidationPattern = Pattern.compile("^(?:\\*)$|^\\d{4}$|^(?:\\d{4})/(?:\\d{1,3})$|^(?:\\d{4},)*(?:(?!^)\\d{4})$|^(?:\\d{4})-(?:\\d{4})$");
+    // ^(?:\\*)$                        -> Every step {*}
+    // ^\\d{4}$                         -> Single value {any 4 digit number}
+    // ^(?:\\*|\\d{4})/(?:\\d{1,3})$    -> Frequency range {* | any 4 digit number}/{any 3 digit number} (specific validity must be checked outside the match -> 1970-2099 / 1-129)
+    // ^(?:\\d{4},)*(?:(?!^)\\d{4})$    -> Multiple values {any 4 digit number},{any 4 digit number},{any 4 digit number}... (specific validity must be checked outside the match -> 1970-2099)
+    // ^(?:\\d{4})-(?:\\d{4})$          -> Range {any 4 digit number}-{any 4 digit number} (specific validity must be checked outside the match -> 1970-2099)
+    private final Pattern yearsValidationPattern = Pattern.compile("^(?:\\*)$|^\\d{4}$|^(?:\\*|\\d{4})/(?:\\d{1,3})$|^(?:\\d{4},)*(?:(?!^)\\d{4})$|^(?:\\d{4})-(?:\\d{4})$");
 
     // Pattern matching
     private final Pattern   yearPattern             = Pattern.compile(".*\\d{4}$");
@@ -303,9 +303,7 @@ public class CronExpressionParser {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Inspect the expression parts
         if (expressionParts.length < 5) {
-            if (options.throwExceptionOnParseError) {
-                throw new CronExpressionParseException(String.format("The cron expression \"%s\" only has [%d] parts. At least 5 parts are required.", expression, expressionParts.length));
-            }
+            throw new CronExpressionParseException(String.format("The cron expression \"%s\" only has [%d] parts. At least 5 parts are required.", expression, expressionParts.length));
         } else if (expressionParts.length == 5) {
             // 5 part cron so shift array past seconds element
             System.arraycopy(expressionParts, 0, parsed, 1, 5);
@@ -326,12 +324,51 @@ public class CronExpressionParser {
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Validate parts
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Normalize the expression
         normalizeExpression(parsed);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Validate parts
+
+        // Check if both DoM and DoW have been specified (? is normalized to * at this stage)
+        if (!parsed[3].equals("*") && !parsed[5].equals("*")) {
+            throw new CronExpressionParseException("Specifying both a Day of Month and Day of Week is not supported. Either one or the other should be declared as \"?\"");
+        }
+
+        // Check seconds
+        if (!parsed[0].isEmpty() && !secsAndMinsValidationPattern.matcher(parsed[0]).matches()) {
+            throw new CronExpressionParseException("The expression describing the SECOND field is not in a valid format");
+        }
+
+        // Check minutes
+        if (parsed[1].isEmpty() || !secsAndMinsValidationPattern.matcher(parsed[1]).matches()) {
+            throw new CronExpressionParseException("The expression describing the MINUTE field is not in a valid format");
+        }
+
+        // Check hours
+        if (parsed[2].isEmpty() || !hoursPattern.matcher(parsed[2]).matches()) {
+            throw new CronExpressionParseException("The expression describing the HOUR field is not in a valid format");
+        }
+
+        // Check Day of Month
+        if (parsed[3].isEmpty() || !domValidationPattern.matcher(parsed[3]).matches()) {
+            throw new CronExpressionParseException("The expression describing the DAY OF MONTH field is not in a valid format");
+        }
+
+        // Check Month
+        if (parsed[4].isEmpty() || !monthsValidationPattern.matcher(parsed[4]).matches()) {
+            throw new CronExpressionParseException("The expression describing the MONTH field is not in a valid format");
+        }
+
+        // Check Day of Week
+        if (parsed[5].isEmpty() || !dowValidationPattern.matcher(parsed[5]).matches()) {
+            throw new CronExpressionParseException("The expression describing the DAY OF WEEK field is not in a valid format");
+        }
+
+        // Check year
+        if (!parsed[6].isEmpty() && !yearsValidationPattern.matcher(parsed[6]).matches()) {
+            throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format");
+        }
 
         return parsed;
     }
