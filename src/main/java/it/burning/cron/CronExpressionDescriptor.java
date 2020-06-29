@@ -431,14 +431,20 @@ public class CronExpressionDescriptor {
     protected String GetHoursDescription() {
         final String expression = expressionParts[2];
 
-        return getSegmentDescription(expression, getString("EveryHour"), desc -> formatTime(desc, "0"), desc -> String.format(getString("EveryX0Hours"), desc), desc -> getString("BetweenX0AndX1"), desc -> getString("AtX0"), desc -> {
-            final String specialFormat = getString("ComaMinX0ThroughMinX1");
-            if (specialFormat != null && !specialFormat.isEmpty()) {
-                return specialFormat;
-            }
+        return getSegmentDescription(expression,
+                                     getString("EveryHour"),
+                                     desc -> formatTime(desc, "0"),
+                                     desc -> String.format(getString("EveryX0Hours"), desc),
+                                     desc -> getString("BetweenX0AndX1"),
+                                     desc -> getString("AtX0"),
+                                     desc -> {
+                                         final String specialFormat = getString("ComaMinX0ThroughMinX1");
+                                         if (specialFormat != null && !specialFormat.isEmpty()) {
+                                             return specialFormat;
+                                         }
 
-            return getString("ComaX0ThroughX1");
-        });
+                                         return getString("ComaX0ThroughX1");
+                                     });
     }
 
     /**
@@ -457,6 +463,11 @@ public class CronExpressionDescriptor {
             description = getSegmentDescription(expressionParts[5],
                                                 getString("ComaEveryDay"),
                                                 desc -> {
+                                                    // If we're parsing a frequency the single item can be "7", but we won't have a single item description
+                                                    if (desc.equals("7")) {
+                                                        return "";
+                                                    }
+
                                                     // Drop "Last" identifier (L) if specified
                                                     if (desc.contains("L")) {
                                                         desc = desc.replace("L", "");
