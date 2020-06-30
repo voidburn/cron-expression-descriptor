@@ -2,9 +2,7 @@ package it.burning.cron;
 
 import it.burning.utils.RxReplace;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static it.burning.cron.CronExpressionParser.CronExpressionPart.*;
@@ -30,10 +28,11 @@ public class CronExpressionParser {
     //region FIELDS
 
     // Config
-    public static final int MIN_YEAR           = 1970;
-    public static final int MAX_YEAR           = 2099;
-    public static final int MIN_YEAR_FREQUENCY = 0;
-    public static final int MAX_YEAR_FREQUENCY = MAX_YEAR - MIN_YEAR;
+    private static final String LOCALIZATION_BUNDLE = "localization";
+    private static final int    MIN_YEAR            = 1970;
+    private static final int    MAX_YEAR            = 2099;
+    private static final int    MIN_YEAR_FREQUENCY  = 0;
+    private static final int    MAX_YEAR_FREQUENCY  = MAX_YEAR - MIN_YEAR;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // PLEASE NOTE:
@@ -127,7 +126,7 @@ public class CronExpressionParser {
 
             // We're about to adjust based on a start index, we should reject out of bounds values before we do so
             if (Integer.parseInt(dowDigits) > 7) {
-                throw new CronExpressionParseException("The expression describing the DAY OF WEEK field is not in a valid format", DOW);
+                throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldDoW")), DOW);
             }
 
             // Adjust indices
@@ -194,8 +193,9 @@ public class CronExpressionParser {
     }
 
     // State
-    private final String  expression;
-    private final Options options;
+    private final String         expression;
+    private final Options        options;
+    private final ResourceBundle localization;
 
     //endregion
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -320,6 +320,7 @@ public class CronExpressionParser {
     public CronExpressionParser(final String expression, final Options options) {
         this.expression = expression;
         this.options = options != null ? options : new Options();
+        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.options.getLocale());
     }
 
     //endregion
@@ -351,7 +352,7 @@ public class CronExpressionParser {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Inspect the expression parts
         if (expressionParts.length < 5) {
-            throw new CronExpressionParseException(String.format("The cron expression \"%s\" only has [%d] parts. At least 5 parts are required.", expression, expressionParts.length), ALL);
+            throw new CronExpressionParseException(String.format(getString("InvalidExpressionFormatTooFewParts"), expression, expressionParts.length), ALL);
         } else if (expressionParts.length == 5) {
             // 5 part cron so shift array past seconds element
             System.arraycopy(expressionParts, 0, parsed, 1, 5);
@@ -367,7 +368,7 @@ public class CronExpressionParser {
             System.arraycopy(expressionParts, 0, parsed, 0, 7);
         } else {
             if (options.throwExceptionOnParseError) {
-                throw new CronExpressionParseException(String.format("The cron expression \"%s\" has too many parts [%d]. Expressions must not have more than 7 parts.", expression, expressionParts.length), ALL);
+                throw new CronExpressionParseException(String.format(getString("InvalidExpressionFormatTooManyParts"), expression, expressionParts.length), ALL);
             }
         }
 
@@ -380,42 +381,42 @@ public class CronExpressionParser {
 
         // Check if both DoM and DoW have been specified (? is normalized to * at this stage)
         if (!parsed[3].equals("*") && !parsed[5].equals("*")) {
-            throw new CronExpressionParseException("Specifying both a Day of Month and Day of Week is not supported. Either one or the other should be declared as \"?\"", ALL);
+            throw new CronExpressionParseException(getString("InvalidDomDowExpression"), ALL);
         }
 
         // Check seconds
         if (!parsed[0].isEmpty() && !secsAndMinsValidationPattern.matcher(parsed[0]).matches()) {
-            throw new CronExpressionParseException("The expression describing the SECOND field is not in a valid format", SEC);
+            throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldSecond")), SEC);
         }
 
         // Check minutes
         if (parsed[1].isEmpty() || !secsAndMinsValidationPattern.matcher(parsed[1]).matches()) {
-            throw new CronExpressionParseException("The expression describing the MINUTE field is not in a valid format", MIN);
+            throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldMinute")), MIN);
         }
 
         // Check hours
         if (parsed[2].isEmpty() || !hoursValidationPattern.matcher(parsed[2]).matches()) {
-            throw new CronExpressionParseException("The expression describing the HOUR field is not in a valid format", HOUR);
+            throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldHour")), HOUR);
         }
 
         // Check Day of Month
         if (parsed[3].isEmpty() || !domValidationPattern.matcher(parsed[3]).matches()) {
-            throw new CronExpressionParseException("The expression describing the DAY OF MONTH field is not in a valid format", DOM);
+            throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldDoM")), DOM);
         }
 
         // Check Month
         if (parsed[4].isEmpty() || !monthsValidationPattern.matcher(parsed[4]).matches()) {
-            throw new CronExpressionParseException("The expression describing the MONTH field is not in a valid format", MONTH);
+            throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldMonth")), MONTH);
         }
 
         // Check Day of Week
         if (parsed[5].isEmpty() || !dowValidationPattern.matcher(parsed[5]).matches()) {
-            throw new CronExpressionParseException("The expression describing the DAY OF WEEK field is not in a valid format", DOW);
+            throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldDoW")), DOW);
         }
 
         // Check year
         if (!parsed[6].isEmpty() && !yearsValidationPattern.matcher(parsed[6]).matches()) {
-            throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format", YEAR);
+            throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldYear")), YEAR);
         } else if (!parsed[6].isEmpty() && yearsValidationPattern.matcher(parsed[6]).matches()) {
             if (parsed[6].contains("/")) {
                 final String[] frequencyParts = parsed[6].split("/");
@@ -428,22 +429,22 @@ public class CronExpressionParser {
                             if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
                                 Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
 
-                                throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format. Accepted year values are " + MIN_YEAR + "-" + MAX_YEAR, YEAR);
+                                throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                             }
                         }
                     } else {
                         // Frequency only, validate single year entry
                         if (!frequencyParts[0].equals("*") && (Integer.parseInt(frequencyParts[0]) < MIN_YEAR || Integer.parseInt(frequencyParts[0]) > MAX_YEAR)) {
-                            throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format. Accepted year values are " + MIN_YEAR + "-" + MAX_YEAR, YEAR);
+                            throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                         }
                     }
 
                     // Validate frequency
                     if (Integer.parseInt(frequencyParts[1]) < MIN_YEAR_FREQUENCY || Integer.parseInt(frequencyParts[1]) > MAX_YEAR_FREQUENCY) {
-                        throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format. Accepted frequency values are " + MIN_YEAR_FREQUENCY + "-" + MAX_YEAR_FREQUENCY, YEAR);
+                        throw new CronExpressionParseException(String.format(getString("InvalidYearFrequencyValue"), MIN_YEAR_FREQUENCY, MAX_YEAR_FREQUENCY), YEAR);
                     }
                 } else {
-                    throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format", YEAR);
+                    throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldYear")), YEAR);
                 }
             }
         }
@@ -580,20 +581,38 @@ public class CronExpressionParser {
                     final String[] steps = parsed[i].split("/");
                     if (steps.length > 2) {
                         final CronExpressionPart errorRange;
+                        final String fieldString;
                         if (stepRangeThrough.equals("12")) {
                             errorRange = MONTH;
+                            fieldString = getString("InvalidFieldMonth");
                         } else if (stepRangeThrough.equals("6")) {
                             errorRange = DOW;
+                            fieldString = getString("InvalidFieldDoW");
                         } else {
                             errorRange = YEAR;
+                            fieldString = getString("InvalidFieldYear");
                         }
 
-                        throw new CronExpressionParseException("The expression describing the " + errorRange.getValue() + " field is not in a valid format", errorRange);
+                        throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), fieldString), errorRange);
                     }
 
                     parsed[i] = String.format("%d-%d/%d", Integer.parseInt(steps[0]), Integer.parseInt(stepRangeThrough), Integer.parseInt(steps[1]));
                 }
             }
+        }
+    }
+
+    /**
+     * Gets a localized String resource
+     *
+     * @param resourceName The name of the resource String to retrieve
+     * @return The resource value
+     */
+    protected String getString(final String resourceName) {
+        try {
+            return localization.getString(resourceName);
+        } catch (MissingResourceException e) {
+            return "{{" + resourceName + "}}";
         }
     }
 
