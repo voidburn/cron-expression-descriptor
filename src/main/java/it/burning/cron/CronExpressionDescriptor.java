@@ -478,8 +478,8 @@ public class CronExpressionDescriptor {
                                                         desc = desc.substring(0, desc.indexOf("#"));
                                                     }
 
+                                                    // Retrieve localized day based on the ENUM entry
                                                     final int dayNum = Integer.parseInt(desc);
-
                                                     return getString(Day.values()[dayNum].name());
                                                 },
                                                 desc -> String.format(getString("ComaEveryX0DaysOfTheWeek"), desc),
@@ -532,9 +532,9 @@ public class CronExpressionDescriptor {
         return getSegmentDescription(expressionParts[4],
                                      "",
                                      desc -> {
-                                         final int month = Integer.parseInt(desc) - 1; // Offset to match the enum's ordinals
-
-                                         return getString(Month.values()[month].name());
+                                         // Retrieve localized month name based on ENUM entry
+                                         final int monthNum = Integer.parseInt(desc) - 1; // Offset to match the enum's ordinals
+                                         return getString(Month.values()[monthNum].name());
                                      }, desc -> String.format(getString("ComaEveryX0Months"), desc),
                                      desc -> {
                                          final String specialFormat = getString("ComaMonthX0ThroughMonthX1");
