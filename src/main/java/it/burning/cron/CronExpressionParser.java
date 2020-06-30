@@ -454,7 +454,7 @@ public class CronExpressionParser {
 
                     throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                 }
-            } else {
+            } else if (!parsed[6].equals("*")) {
                 // Check single value
                 if (Integer.parseInt(parsed[6]) < MIN_YEAR || Integer.parseInt(parsed[6]) > MAX_YEAR) {
 
