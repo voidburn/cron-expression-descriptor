@@ -425,7 +425,7 @@ public class CronExpressionParser {
                     if (frequencyParts[0].contains("-")) {
                         final String[] rangeParts = frequencyParts[0].split("-");
                         if (rangeParts.length == 2) {
-                            // Range parts are out of bounds
+                            // Check if range parts are out of bounds
                             if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
                                 Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
 
@@ -445,6 +445,20 @@ public class CronExpressionParser {
                     }
                 } else {
                     throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldYear")), YEAR);
+                }
+            } else if (parsed[6].contains("-")) {
+                // Check if range parts are out of bounds
+                final String[] rangeParts = parsed[6].split("-");
+                if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
+                    Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
+
+                    throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
+                }
+            } else {
+                // Check single value
+                if (Integer.parseInt(parsed[6]) < MIN_YEAR || Integer.parseInt(parsed[6]) > MAX_YEAR) {
+
+                    throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                 }
             }
         }

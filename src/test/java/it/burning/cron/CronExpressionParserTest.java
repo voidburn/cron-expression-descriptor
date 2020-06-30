@@ -140,7 +140,7 @@ class CronExpressionParserTest {
         assertEquals("9-9", parsed[2], "Hour should be 9-9");
         assertEquals("2", parsed[3], "DoW should be 2");
         assertEquals("12,1,3", parsed[4], "Month should be 12,1,3");
-        assertEquals("*", parsed[5], "DoM should be 1,3");
+        assertEquals("*", parsed[5], "DoM should be *");
         assertEquals("2020", parsed[6], "Year should be 2020");
     }
 }
