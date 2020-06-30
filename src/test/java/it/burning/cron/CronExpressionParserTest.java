@@ -109,6 +109,29 @@ class CronExpressionParserTest {
         assertEquals("The expression describing the DAY OF WEEK field is not in a valid format", exception.getMessage());
 
         // Year
+        exception = assertThrows(CronExpressionParseException.class, () -> new CronExpressionParser("* * * ? * * 2019/2020/2021").parse(), "");
+        assertEquals(CronExpressionPart.YEAR, exception.getPart());
+        assertEquals("The expression describing the YEAR field is not in a valid format", exception.getMessage());
+
+        exception = assertThrows(CronExpressionParseException.class, () -> new CronExpressionParser("* * * ? * * 2020/130").parse(), "");
+        assertEquals(CronExpressionPart.YEAR, exception.getPart());
+        assertEquals("The expression describing the YEAR field is not in a valid format. Accepted frequency values are 0-129", exception.getMessage());
+
+        exception = assertThrows(CronExpressionParseException.class, () -> new CronExpressionParser("* * * ? * * 2120/2").parse(), "");
+        assertEquals(CronExpressionPart.YEAR, exception.getPart());
+        assertEquals("The expression describing the YEAR field is not in a valid format. Accepted year values are 1970-2099", exception.getMessage());
+
+        exception = assertThrows(CronExpressionParseException.class, () -> new CronExpressionParser("* * * ? * * 1980-2120/2").parse(), "");
+        assertEquals(CronExpressionPart.YEAR, exception.getPart());
+        assertEquals("The expression describing the YEAR field is not in a valid format. Accepted year values are 1970-2099", exception.getMessage());
+
+        exception = assertThrows(CronExpressionParseException.class, () -> new CronExpressionParser("* * * ? * * 2980-1200/130").parse(), "");
+        assertEquals(CronExpressionPart.YEAR, exception.getPart());
+        assertEquals("The expression describing the YEAR field is not in a valid format. Accepted year values are 1970-2099", exception.getMessage());
+
+        exception = assertThrows(CronExpressionParseException.class, () -> new CronExpressionParser("* * * ? * * 2019-2020-2021").parse(), "");
+        assertEquals(CronExpressionPart.YEAR, exception.getPart());
+        assertEquals("The expression describing the YEAR field is not in a valid format", exception.getMessage());
 
         // Test valid parse
         final String[] parsed = new CronExpressionParser("5 0/3 9 2 DEC,JAN,MAR ? 2020").parse();

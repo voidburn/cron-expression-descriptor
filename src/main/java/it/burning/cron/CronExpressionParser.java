@@ -29,7 +29,18 @@ public class CronExpressionParser {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //region FIELDS
 
-    // Validation patterns
+    // Config
+    public static final int MIN_YEAR           = 1970;
+    public static final int MAX_YEAR           = 2099;
+    public static final int MIN_YEAR_FREQUENCY = 0;
+    public static final int MAX_YEAR_FREQUENCY = MAX_YEAR - MIN_YEAR;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // PLEASE NOTE:
+    //
+    // Validation patterns are applied to normalized parts, not to the raw expression. Please refer to the
+    // normalizeExpression() method for details on how the parts are transformed during that process. This affects the
+    // expected patterns we allow for each part.
 
     // SECONDS and MINUTES in the range and frequencies 0-59
     //
@@ -91,12 +102,13 @@ public class CronExpressionParser {
 
     // YEARS in the range 1970-2999
     //
-    // ^(?:\\*)$                        -> Every step {*}
-    // ^\\d{4}$                         -> Single value {any 4 digit number}
-    // ^(?:\\*|\\d{4})/(?:\\d{1,3})$    -> Frequency range {* | any 4 digit number}/{any 3 digit number} (specific validity must be checked outside the match -> 1970-2099 / 1-129)
-    // ^(?:\\d{4},)*(?:(?!^)\\d{4})$    -> Multiple values {any 4 digit number},{any 4 digit number},{any 4 digit number}... (specific validity must be checked outside the match -> 1970-2099)
-    // ^(?:\\d{4})-(?:\\d{4})$          -> Range {any 4 digit number}-{any 4 digit number} (specific validity must be checked outside the match -> 1970-2099)
-    private final Pattern yearsValidationPattern = Pattern.compile("^(?:\\*)$|^\\d{4}$|^(?:\\*|\\d{4})/(?:\\d{1,3})$|^(?:\\d{4},)*(?:(?!^)\\d{4})$|^(?:\\d{4})-(?:\\d{4})$");
+    // ^(?:\\*)$                                -> Every step {*}
+    // ^\\d{4}$                                 -> Single value {any 4 digit number}
+    // ^(?:\\*|\\d{4})/(?:\\d{1,3})$            -> Frequency range {* | any 4 digit number}/{any 3 digit number} (specific validity must be checked outside the match -> 1970-2099 / 1-129)
+    // ^(?:\\d{4},)*(?:(?!^)\\d{4})$            -> Multiple values {any 4 digit number},{any 4 digit number},{any 4 digit number}... (specific validity must be checked outside the match -> 1970-2099)
+    // ^(?:\\d{4})-(?:\\d{4})$                  -> Range {any 4 digit number}-{any 4 digit number} (specific validity must be checked outside the match -> 1970-2099)
+    // ^(?:\\d{4})-(?:\\d{4})/(?:\\d{1,3})$     -> Range AND Frequency {any 4 digit number}-{any 4 digit number}/{any 3 digit number}
+    private final Pattern yearsValidationPattern = Pattern.compile("^(?:\\*)$|^\\d{4}$|^(?:\\*|\\d{4})/(?:\\d{1,3})$|^(?:\\d{4},)*(?:(?!^)\\d{4})$|^(?:\\d{4})-(?:\\d{4})$|^(?:\\d{4})-(?:\\d{4})/(?:\\d{1,3})$");
 
     // Pattern matching
     private final Pattern   yearPattern             = Pattern.compile(".*\\d{4}$");
@@ -404,6 +416,36 @@ public class CronExpressionParser {
         // Check year
         if (!parsed[6].isEmpty() && !yearsValidationPattern.matcher(parsed[6]).matches()) {
             throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format", YEAR);
+        } else if (!parsed[6].isEmpty() && yearsValidationPattern.matcher(parsed[6]).matches()) {
+            if (parsed[6].contains("/")) {
+                final String[] frequencyParts = parsed[6].split("/");
+                if (frequencyParts.length == 2) {
+                    // Check range if present
+                    if (frequencyParts[0].contains("-")) {
+                        final String[] rangeParts = frequencyParts[0].split("-");
+                        if (rangeParts.length == 2) {
+                            // Range parts are out of bounds
+                            if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
+                                Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
+
+                                throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format. Accepted year values are " + MIN_YEAR + "-" + MAX_YEAR, YEAR);
+                            }
+                        }
+                    } else {
+                        // Frequency only, validate single year entry
+                        if (!frequencyParts[0].equals("*") && (Integer.parseInt(frequencyParts[0]) < MIN_YEAR || Integer.parseInt(frequencyParts[0]) > MAX_YEAR)) {
+                            throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format. Accepted year values are " + MIN_YEAR + "-" + MAX_YEAR, YEAR);
+                        }
+                    }
+
+                    // Validate frequency
+                    if (Integer.parseInt(frequencyParts[1]) < MIN_YEAR_FREQUENCY || Integer.parseInt(frequencyParts[1]) > MAX_YEAR_FREQUENCY) {
+                        throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format. Accepted frequency values are " + MIN_YEAR_FREQUENCY + "-" + MAX_YEAR_FREQUENCY, YEAR);
+                    }
+                } else {
+                    throw new CronExpressionParseException("The expression describing the YEAR field is not in a valid format", YEAR);
+                }
+            }
         }
 
         return parsed;
@@ -528,7 +570,7 @@ public class CronExpressionParser {
                         stepRangeThrough = "6";
                         break;
                     case 6:
-                        stepRangeThrough = "9999";
+                        stepRangeThrough = String.valueOf(MAX_YEAR);
                         break;
                     default:
                         break;
