@@ -152,7 +152,7 @@ public class CronExpressionDescriptor {
      * Set the expression that this instance will process next time the {@link #getDescription(DescriptionType)} is
      * called. Default options will be used.
      *
-     * @param expression
+     * @param expression The expression to be parsed
      */
     public void setExpression(final String expression) {
         setExpression(expression, DEFAULT_OPTIONS);
