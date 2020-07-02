@@ -129,15 +129,16 @@ public class CronExpressionParser {
                 throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldDoW")), DOW);
             }
 
-            // Adjust indices
-            if (options.isDayOfWeekStartIndexZero()) {
-                // "7" also means Sunday so we will convert to "0" to normalize it
+            // Adjust Day of Week index for regular cron expressions (5 parts only). In regular cron "7" is accepted as sunday but not considered standard.
+            if (partsCount == 5) {
                 if (dowDigits.equals("7")) {
                     dowDigitsAdjusted = "0";
                 }
             } else {
-                // If dayOfWeekStartIndexZero==false, Sunday is specified as 1 and Saturday is specified as 7.
-                // To normalize, we will shift the DOW number down so that 1 becomes 0, 2 becomes 1, and so on.
+                // If the expression has more than 5 parts (which means it includes seconds and/or years), Sunday is specified as 1 and Saturday is specified as 7.
+                // To normalize, we bring it back in the 0-6 range.
+                //
+                // See Quartz cron triggers (http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html)
                 dowDigitsAdjusted = String.valueOf(Integer.parseInt(dowDigits) - 1);
             }
 
@@ -196,6 +197,7 @@ public class CronExpressionParser {
     private final String         expression;
     private final Options        options;
     private final ResourceBundle localization;
+    private       int            partsCount;
 
     //endregion
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,8 +226,7 @@ public class CronExpressionParser {
 
         // Defaults
         private boolean throwExceptionOnParseError = true;
-        private boolean verbose                    = true;
-        private boolean dayOfWeekStartIndexZero    = false;
+        private boolean verbose                    = false;
         private boolean use24HourTimeFormat        = true;
         private Locale  locale                     = Locale.getDefault();
 
@@ -249,14 +250,6 @@ public class CronExpressionParser {
 
         public void setVerbose(boolean verbose) {
             this.verbose = verbose;
-        }
-
-        public boolean isDayOfWeekStartIndexZero() {
-            return dayOfWeekStartIndexZero;
-        }
-
-        public void setDayOfWeekStartIndexZero(boolean dayOfWeekStartIndexZero) {
-            this.dayOfWeekStartIndexZero = dayOfWeekStartIndexZero;
         }
 
         public boolean use24HourTimeFormat() {
@@ -346,29 +339,31 @@ public class CronExpressionParser {
             }
         }
 
+        // Determine how many significant parts the expression contains
         final String[] expressionParts = new String[tmp.size()];
         tmp.toArray(expressionParts);
+        partsCount = expressionParts.length;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Inspect the expression parts
-        if (expressionParts.length < 5) {
-            throw new CronExpressionParseException(String.format(getString("InvalidExpressionFormatTooFewParts"), expression, expressionParts.length), ALL);
-        } else if (expressionParts.length == 5) {
+        if (partsCount < 5) {
+            throw new CronExpressionParseException(String.format(getString("InvalidExpressionFormatTooFewParts"), expression, partsCount), ALL);
+        } else if (partsCount == 5) {
             // 5 part cron so shift array past seconds element
             System.arraycopy(expressionParts, 0, parsed, 1, 5);
-        } else if (expressionParts.length == 6) {
+        } else if (partsCount == 6) {
             // If the last element is a "year" definition assume that the missing part is "second" (first token)
             if (yearPattern.matcher(expressionParts[5]).matches()) {
                 System.arraycopy(expressionParts, 0, parsed, 1, 6);
             } else {
                 System.arraycopy(expressionParts, 0, parsed, 0, 6);
             }
-        } else if (expressionParts.length == 7) {
+        } else if (partsCount == 7) {
             // All parts are in use
             System.arraycopy(expressionParts, 0, parsed, 0, 7);
         } else {
             if (options.throwExceptionOnParseError) {
-                throw new CronExpressionParseException(String.format(getString("InvalidExpressionFormatTooManyParts"), expression, expressionParts.length), ALL);
+                throw new CronExpressionParseException(String.format(getString("InvalidExpressionFormatTooManyParts"), expression, partsCount), ALL);
             }
         }
 
@@ -380,12 +375,12 @@ public class CronExpressionParser {
         // Validate parts
 
         // Check if both DoM and DoW have been specified (? is normalized to * at this stage)
-        if (!parsed[3].equals("*") && !parsed[5].equals("*")) {
+        if (partsCount > 5 && (!parsed[3].equals("*") && !parsed[5].equals("*"))) {
             throw new CronExpressionParseException(getString("InvalidDomDowExpression"), ALL);
         }
 
         // Check seconds
-        if (!parsed[0].isEmpty() && !secsAndMinsValidationPattern.matcher(parsed[0]).matches()) {
+        if (partsCount > 5 && (!parsed[0].isEmpty() && !secsAndMinsValidationPattern.matcher(parsed[0]).matches())) {
             throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldSecond")), SEC);
         }
 
@@ -415,10 +410,10 @@ public class CronExpressionParser {
         }
 
         // Check year
-        if (!parsed[6].isEmpty() && !yearsValidationPattern.matcher(parsed[6]).matches()) {
+        if (partsCount > 5 && (!parsed[6].isEmpty() && !yearsValidationPattern.matcher(parsed[6]).matches())) {
             throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldYear")), YEAR);
         } else if (!parsed[6].isEmpty() && yearsValidationPattern.matcher(parsed[6]).matches()) {
-            if (parsed[6].contains("/")) {
+            if (partsCount > 5 && parsed[6].contains("/")) {
                 final String[] frequencyParts = parsed[6].split("/");
                 if (frequencyParts.length == 2) {
                     // Check range if present
@@ -469,7 +464,7 @@ public class CronExpressionParser {
     /**
      * Massage the parsed expression into a format that can be digested by the ExpressionDescriptor
      *
-     * @param parsed
+     * @param parsed The parsed expression parts
      */
     private void normalizeExpression(final String[] parsed) {
         // Convert ? to * only for DOM and DOW

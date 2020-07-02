@@ -36,7 +36,7 @@ public class CronExpressionDescriptor {
     private final Pattern   yearPattern                          = Pattern.compile("(\\d{4})");
     private final Pattern   segmentRangesOrMultipleSearchPattern = Pattern.compile("[/\\-,]");
     private final Pattern   segmentAnyOrMultipleSearchPattern    = Pattern.compile("[*,]");
-    private final RxReplace stripDescription                     = new RxReplace("[\\\\,\\ ?$]") {
+    private final RxReplace stripTrailingChars                   = new RxReplace("[\\,\\s]*$") {
         @Override
         public String replacement() {
             // Strip all matches
@@ -805,11 +805,13 @@ public class CronExpressionDescriptor {
      */
     protected String transformVerbosity(String description, boolean useVerboseFormat) {
         if (!useVerboseFormat) {
+            // Strip minute hour and day if they match their all encompassing statements
             description = description.replace(getString("ComaEveryMinute"), "");
             description = description.replace(getString("ComaEveryHour"), "");
             description = description.replace(getString("ComaEveryDay"), "");
 
-            description = stripDescription.replace(description);
+            // Strip trailing commas and spaces, if any
+            description = stripTrailingChars.replace(description);
         }
 
         return description;
