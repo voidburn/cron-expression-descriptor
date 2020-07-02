@@ -38,8 +38,7 @@ implementation 'it.burning:cron-expression-descriptor:1.0'
  A `ExpressionDescriptor.Options` object can be passed to `getDescription()`.  The following options are available:
  
  - **boolean throwExceptionOnParseError** - If exception occurs when trying to parse expression and generate description, whether to throw or catch and output the Exception message as the description. **(Default: true)**
- - **boolean verbose** - Whether to use a verbose description **(Default: true)**
- - **boolean dayOfWeekStartIndexZero** - Whether to interpret cron expression DOW `1` as Sunday or Monday. **(Default: false)**
+ - **boolean verbose** - Whether to use a verbose description **(Default: false)**
  - **boolean use24HourTimeFormat** - If true, descriptions will use a [24-hour clock](https://en.wikipedia.org/wiki/24-hour_clock) **(Default: true)**
  - **string locale** - The locale to use **(Default: current system locale)**
  
