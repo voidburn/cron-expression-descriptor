@@ -1,3 +1,5 @@
+**Version 1.**
+ * Release to Maven Central
 **Version 1.0.3-SNAPSHOT**
  * Fixed verbose mode description stripper
  * Verbose mode is now OFF by default in the Options class
