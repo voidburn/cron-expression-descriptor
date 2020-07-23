@@ -22,15 +22,22 @@ Add the following dependency to your pom.xml:
 <dependency>
   <groupId>it.burning</groupId>
   <artifactId>cron-expression-descriptor</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 ```
 
 ### Gradle
-Add the dependency to your gradle.build:
+Add the repositories and dependency to your gradle.build script:
 
 ```
-implementation 'it.burning:cron-expression-descriptor:1.0' 
+repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+}
+
+dependencies {
+    implementation "it.burning:cron-expression-descriptor:1.1"
+}
 ```
  
  ## Options
