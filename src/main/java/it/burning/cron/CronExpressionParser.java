@@ -352,8 +352,14 @@ public class CronExpressionParser {
             // 5 part cron so shift array past seconds element
             System.arraycopy(expressionParts, 0, parsed, 1, 5);
         } else if (partsCount == 6) {
-            // If the last element is a "year" definition assume that the missing part is "second" (first token)
-            if (yearPattern.matcher(expressionParts[5]).matches()) {
+            // We will detect if this 6 part expression has a year specified and if so we will shift the parts and treat the
+            // first part as a minute part rather than a second part.
+            //
+            // Ways we detect:
+            //   1. Last part is a literal year (i.e. 2020)
+            //   2. 3rd or 5th part is specified as "?" (DOM or DOW)
+            boolean isYearWithNoSecondsPart = yearPattern.matcher(expressionParts[5]).matches() || expressionParts[4].equals("?") || expressionParts[2].equals("?");
+            if (isYearWithNoSecondsPart) {
                 System.arraycopy(expressionParts, 0, parsed, 1, 6);
             } else {
                 System.arraycopy(expressionParts, 0, parsed, 0, 6);

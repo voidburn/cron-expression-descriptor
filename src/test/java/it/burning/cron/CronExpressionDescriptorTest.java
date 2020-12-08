@@ -78,6 +78,7 @@ class CronExpressionDescriptorTest {
         assertEquals("Every 5 minutes, between 14:00 and 14:59", CronExpressionDescriptor.getDescription("0 0/5 14 * * ?", DEFAULT_OPTIONS));
         assertEquals("Every 5 minutes, at 14:00 and 18:00", CronExpressionDescriptor.getDescription("0 0/5 14,18 * * ?", DEFAULT_OPTIONS));
         assertEquals("Every minute between 14:00 and 14:05", CronExpressionDescriptor.getDescription("0 0-5 14 * * ?", DEFAULT_OPTIONS));
+        assertEquals("Every 10 minutes, Monday through Friday", CronExpressionDescriptor.getDescription("0/10 * ? * MON-FRI *", DEFAULT_OPTIONS));
         assertEquals("At 10 and 44 minutes past the hour, at 14:00, only on Wednesday, only in March", CronExpressionDescriptor.getDescription("0 10,44 14 ? 3 WED", DEFAULT_OPTIONS));
         assertEquals("At 10:15, Monday through Friday", CronExpressionDescriptor.getDescription("0 15 10 ? * MON-FRI", DEFAULT_OPTIONS));
         assertEquals("At 10:15, on day 15 of the month", CronExpressionDescriptor.getDescription("0 15 10 15 * ?", DEFAULT_OPTIONS));
