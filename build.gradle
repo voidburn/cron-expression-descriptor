@@ -27,7 +27,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group "it.burning"
-version '1.2'
+version '1.2.1'
 
 idea {
     module {
