@@ -1,3 +1,7 @@
+**Version 1.2.2**
+
+* Additional fixes for the Italian localization file
+
 **Version 1.2.1**
 
 * Fixed Italian localization file
