@@ -10,7 +10,6 @@ buildscript {
     repositories {
         // Maven
         mavenCentral()
-        jcenter()
 
         // Sonatype repositories
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
