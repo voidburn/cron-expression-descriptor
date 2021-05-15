@@ -116,6 +116,8 @@ class CronExpressionDescriptorTest {
         assertEquals("Alle 15:00, il giorno 10 del mese, solo il Sabato", CronExpressionDescriptor.getDescription("0 15 10 * 6"));
         assertEquals("Alle 12:00, ogni 5 giorni", CronExpressionDescriptor.getDescription("0 0 12 1/5 * ?"));
         assertEquals("Alle 11:11, il giorno 11 del mese, solo in Novembre", CronExpressionDescriptor.getDescription("0 11 11 11 11 ?"));
+        assertEquals("Ogni 10 minuti, a partire al minuto 5 passata l'ora", CronExpressionDescriptor.getDescription("5/10 * * * *"));
+        assertEquals("Ogni 10 ore, a partire alle 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
 
         // Test resetting default locale
         CronExpressionDescriptor.setDefaultLocale(null);
