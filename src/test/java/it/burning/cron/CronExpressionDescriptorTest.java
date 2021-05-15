@@ -90,6 +90,8 @@ class CronExpressionDescriptorTest {
         assertEquals("At 15:00, on day 10 of the month, only on Saturday", CronExpressionDescriptor.getDescription("0 15 10 * 6", DEFAULT_OPTIONS));
         assertEquals("At 12:00, every 5 days", CronExpressionDescriptor.getDescription("0 0 12 1/5 * ?", DEFAULT_OPTIONS));
         assertEquals("At 11:11, on day 11 of the month, only in November", CronExpressionDescriptor.getDescription("0 11 11 11 11 ?", DEFAULT_OPTIONS));
+        assertEquals("Every 10 minutes, starting at 5 minutes past the hour", CronExpressionDescriptor.getDescription("5/10 * * * *", DEFAULT_OPTIONS));
+        assertEquals("Every 10 hours, starting at 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *", DEFAULT_OPTIONS));
     }
 
     @Test
@@ -141,6 +143,8 @@ class CronExpressionDescriptorTest {
         assertEquals("At 15:00, on day 10 of the month, only on Saturday", CronExpressionDescriptor.getDescription("0 15 10 * 6"));
         assertEquals("At 12:00, every 5 days", CronExpressionDescriptor.getDescription("0 0 12 1/5 * ?"));
         assertEquals("At 11:11, on day 11 of the month, only in November", CronExpressionDescriptor.getDescription("0 11 11 11 11 ?"));
+        assertEquals("Every 10 minutes, starting at 5 minutes past the hour", CronExpressionDescriptor.getDescription("5/10 * * * *"));
+        assertEquals("Every 10 hours, starting at 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
 
     }
 }
