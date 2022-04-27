@@ -265,7 +265,7 @@ public class CronExpressionParser {
         }
 
         public void setLocale(String language) {
-            setLocale((language != null && language.length() == 2) ? new Locale(language) : Locale.getDefault());
+            setLocale(language != null ? new Locale(language) : Locale.getDefault());
         }
 
         public void setLocale(Locale locale) {
