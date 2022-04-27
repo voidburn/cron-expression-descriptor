@@ -1,3 +1,7 @@
+**Version 1.2.3**
+
+* Fixed issue that prevented setting locales with more than two letter descriptors (e.g. "zh_CN", "es_MX"..)
+
 **Version 1.2.2**
 
 * Additional fixes for the Italian localization file
