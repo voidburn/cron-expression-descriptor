@@ -879,6 +879,22 @@ public class CronExpressionDescriptor {
         DEFAULT_OPTIONS.setLocale(language);
     }
 
+    /**
+     * Set the default locale to be used
+     *
+     * @param locale The constant representing a default locale string
+     */
+    public static void setDefaultLocale(final Locale locale) {
+        DEFAULT_OPTIONS.setLocale(locale);
+    }
+
+    /**
+     * Set the default locale of the JVM instance we're running in
+     */
+    public static void setDefaultLocale() {
+        DEFAULT_OPTIONS.setLocale(Locale.getDefault());
+    }
+
     //endregion
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

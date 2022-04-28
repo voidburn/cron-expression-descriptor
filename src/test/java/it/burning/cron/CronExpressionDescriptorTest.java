@@ -122,7 +122,7 @@ class CronExpressionDescriptorTest {
         assertEquals("Ogni 10 ore, a partire alle 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
 
         // Test resetting default locale
-        CronExpressionDescriptor.setDefaultLocale(null);
+        CronExpressionDescriptor.setDefaultLocale();
         assertEquals("At 12:00", CronExpressionDescriptor.getDescription("0 0 12 * * ?"));
         assertEquals("At 10:15", CronExpressionDescriptor.getDescription("0 15 10 ? * *"));
         assertEquals("At 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ?"));

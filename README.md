@@ -93,19 +93,32 @@ ExpressionDescriptor.getDescription("0 0 12 * * ?", new Options() {{
   * Spanish (Mexico) - es-MX ([Ion Mincu](https://github.com/ionmincu))
   * Swedish - sv ([roobin](https://github.com/roobin))
   * Turkish - tr ([Mustafa SADEDİL](https://github.com/sadedil))
-  * Ukrainian - uk ([Taras](https://github.com/tbudurovych))
-  
- If you want to manually set a default Locale for the descripion, to be used for all subsequent calls to "getDescription()" you can use the static method "setDefaultLocale()" by passing it the language identifier:
- 
+* Ukrainian - uk ([Taras](https://github.com/tbudurovych))
+
+If you want to manually set a default Locale for the descripion, to be used for all subsequent calls to "
+getDescription()" you can use the static method "setDefaultLocale()" by passing it the language identifier:
+
  ```java
  ExpressionDescriptor.setDefaultLocale("it");
  ExpressionDescriptor.getDescription("0-10 11 * * *");
  > "Alle 12:00, ogni giorno"
 ```
 
- And you can revert at any time to the default Locale (system's language, assuming english here):
+And you can revert at any time to the default Locale:
+
+For Version 1.2.3+
+
+ ```java
+ ExpressionDescriptor.setDefaultLocale();
+ ExpressionDescriptor.getDescription("0-10 11 * * *");
+  > "At 12:00, every day"
+ ```
+
+Up until Version 1.2.2
+
  ```java
  ExpressionDescriptor.setDefaultLocale(null);
  ExpressionDescriptor.getDescription("0-10 11 * * *");
   > "At 12:00, every day"
  ```
+

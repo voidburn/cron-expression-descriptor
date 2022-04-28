@@ -1,6 +1,11 @@
 **Version 1.2.3**
 
+**BREAKING CHANGE**: To reset the default locale now you must invoke the method without passing "
+null": `ExpressionDescriptor.setDefaultLocale();`
+
 * Fixed issue that prevented setting locales with more than two letter descriptors (e.g. "zh_CN", "es_MX"..)
+* Added new overloads to the `setDefaultLocale` method to allow passing in Locale constants directly, for
+  example: `ExpressionDescriptor.setDefaultLocale(Locale.ENGLISH);`
 
 **Version 1.2.2**
 
