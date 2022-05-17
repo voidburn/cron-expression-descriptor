@@ -4,11 +4,14 @@ import it.burning.cron.CronExpressionParser.Day;
 import it.burning.cron.CronExpressionParser.Month;
 import it.burning.cron.CronExpressionParser.Options;
 import it.burning.utils.RxReplace;
+import it.burning.utils.UTF8Control;
 
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,7 +84,7 @@ public class CronExpressionDescriptor {
         this.options = options;
         this.use24HourTimeFormat = options.use24HourTimeFormat();
         this.locale = options.getLocale();
-        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale);
+        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale, new UTF8Control());
     }
 
     public Options getOptions() {
@@ -139,7 +142,7 @@ public class CronExpressionDescriptor {
         this.options = options;
         this.use24HourTimeFormat = options.use24HourTimeFormat();
         this.locale = options.getLocale();
-        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale);
+        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale, new UTF8Control());
     }
 
     //endregion
@@ -180,7 +183,7 @@ public class CronExpressionDescriptor {
         this.options = options;
         this.use24HourTimeFormat = options.use24HourTimeFormat();
         this.locale = options.getLocale();
-        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale);
+        this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale, new UTF8Control());
     }
 
     /**
