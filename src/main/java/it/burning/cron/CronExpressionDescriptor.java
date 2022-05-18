@@ -6,12 +6,10 @@ import it.burning.cron.CronExpressionParser.Options;
 import it.burning.utils.RxReplace;
 import it.burning.utils.UTF8Control;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -721,7 +719,7 @@ public class CronExpressionDescriptor {
                 }
             }
 
-            description = String.format(getDescriptionFormat.getFor(expression), descriptionContent.toString());
+            description = String.format(getDescriptionFormat.getFor(expression), descriptionContent);
         } else if (expression.contains("-")) {
             description = GenerateBetweenSegmentDescription(expression, getBetweenDescriptionFormat, getSingleItemDescription);
         }
@@ -879,7 +877,7 @@ public class CronExpressionDescriptor {
      * @param language The language identifier string for the desired locale: "en", "it", etc..
      */
     public static void setDefaultLocale(final String language) {
-        DEFAULT_OPTIONS.setLocale(language);
+        DEFAULT_OPTIONS.setLocale(Locale.forLanguageTag(language));
     }
 
     /**

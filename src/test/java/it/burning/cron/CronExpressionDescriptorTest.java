@@ -24,10 +24,10 @@ class CronExpressionDescriptorTest {
 
         descriptor.setOptions(newOptions);
         assertAll("All options should have been set",
-                  () -> assertEquals(newOptions, descriptor.getOptions()),
-                  () -> assertFalse(descriptor.isUse24HourTimeFormat()),
-                  () -> assertEquals("it", descriptor.getLocale().getLanguage()),
-                  () -> assertEquals("it", descriptor.getLocalization().getLocale().getLanguage())
+                () -> assertEquals(newOptions, descriptor.getOptions()),
+                () -> assertFalse(descriptor.isUse24HourTimeFormat()),
+                () -> assertEquals("it", descriptor.getLocale().getLanguage()),
+                () -> assertEquals("it", descriptor.getLocalization().getLocale().getLanguage())
         );
 
 
@@ -146,7 +146,8 @@ class CronExpressionDescriptorTest {
         assertEquals("Every 10 minutes, starting at 5 minutes past the hour", CronExpressionDescriptor.getDescription("5/10 * * * *"));
         assertEquals("Every 10 hours, starting at 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
 
-        CronExpressionDescriptor.setDefaultLocale(Locale.forLanguageTag("pt"));
+        // Tests for Portuguese localisation
+        CronExpressionDescriptor.setDefaultLocale("pt");
         assertEquals("Às 12:00", CronExpressionDescriptor.getDescription("0 0 12 * * ?"));
         assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 ? * *"));
         assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ?"));
@@ -169,6 +170,5 @@ class CronExpressionDescriptorTest {
         assertEquals("Às 11:11, no dia 11 do mês, somente em Novembro", CronExpressionDescriptor.getDescription("0 11 11 11 11 ?"));
         assertEquals("A cada 10 minutos, iniciando aos 5 minutos da hora", CronExpressionDescriptor.getDescription("5/10 * * * *"));
         assertEquals("A cada 10 horas, iniciando Às 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
-
     }
 }
