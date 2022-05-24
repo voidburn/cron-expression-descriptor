@@ -96,7 +96,10 @@ class CronExpressionDescriptorTest {
 
     @Test
     void setDefaultLocale() {
-        // Test setting a default locale
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Tests for Italian localisations
+
+        // Italy
         CronExpressionDescriptor.setDefaultLocale("it");
         assertEquals("Alle 12:00", CronExpressionDescriptor.getDescription("0 0 12 * * ?"));
         assertEquals("Alle 10:15", CronExpressionDescriptor.getDescription("0 15 10 ? * *"));
@@ -121,7 +124,65 @@ class CronExpressionDescriptorTest {
         assertEquals("Ogni 10 minuti, a partire al minuto 5 passata l'ora", CronExpressionDescriptor.getDescription("5/10 * * * *"));
         assertEquals("Ogni 10 ore, a partire alle 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
 
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Tests for Portuguese localisations
+
+        // Portugal
+        CronExpressionDescriptor.setDefaultLocale("pt");
+        assertEquals("Às 12:00", CronExpressionDescriptor.getDescription("0 0 12 * * ?"));
+        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 ? * *"));
+        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ?"));
+        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ? *"));
+        assertEquals("Às 10:15, somente em 2005", CronExpressionDescriptor.getDescription("0 15 10 * * ? 2005"));
+        assertEquals("A cada minuto, entre 14:00 e 14:59", CronExpressionDescriptor.getDescription("0 * 14 * * ?"));
+        assertEquals("A cada 5 minutos, entre 14:00 e 14:59", CronExpressionDescriptor.getDescription("0 0/5 14 * * ?"));
+        assertEquals("A cada 5 minutos, Às 14:00 e 18:00", CronExpressionDescriptor.getDescription("0 0/5 14,18 * * ?"));
+        assertEquals("A cada minuto entre 14:00 e 14:05", CronExpressionDescriptor.getDescription("0 0-5 14 * * ?"));
+        assertEquals("Aos 10 e 44 minutos da hora, Às 14:00, somente de Quarta-feira, somente em Março", CronExpressionDescriptor.getDescription("0 10,44 14 ? 3 WED"));
+        assertEquals("Às 10:15, de Segunda-feira a Sexta-feira", CronExpressionDescriptor.getDescription("0 15 10 ? * MON-FRI"));
+        assertEquals("Às 10:15, no dia 15 do mês", CronExpressionDescriptor.getDescription("0 15 10 15 * ?"));
+        assertEquals("Às 10:15, no último dia do mês", CronExpressionDescriptor.getDescription("0 15 10 L * ?"));
+        assertEquals("Às 10:15, 2 dias antes do último dia do mês", CronExpressionDescriptor.getDescription("0 15 10 L-2 * ?"));
+        assertEquals("Às 10:15, na última Sexta-feira do mês", CronExpressionDescriptor.getDescription("0 15 10 ? * 6L"));
+        assertEquals("Às 10:15, na última Sexta-feira do mês, de 2002 a 2005", CronExpressionDescriptor.getDescription("0 15 10 ? * 6L 2002-2005"));
+        assertEquals("Às 10:15, on the terceira Sexta-feira do mês", CronExpressionDescriptor.getDescription("0 15 10 ? * 6#3"));
+        assertEquals("Às 15:00, no dia 10 do mês, somente de Sábado", CronExpressionDescriptor.getDescription("0 15 10 * 6"));
+        assertEquals("Às 12:00, a cada 5 dias", CronExpressionDescriptor.getDescription("0 0 12 1/5 * ?"));
+        assertEquals("Às 11:11, no dia 11 do mês, somente em Novembro", CronExpressionDescriptor.getDescription("0 11 11 11 11 ?"));
+        assertEquals("A cada 10 minutos, iniciando aos 5 minutos da hora", CronExpressionDescriptor.getDescription("5/10 * * * *"));
+        assertEquals("A cada 10 horas, iniciando Às 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
+
+        // Brazil
+        CronExpressionDescriptor.setDefaultLocale("pt-BR");
+        assertEquals("Às 12:00", CronExpressionDescriptor.getDescription("0 0 12 * * ?"));
+        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 ? * *"));
+        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ?"));
+        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ? *"));
+        assertEquals("Às 10:15, somente em 2005", CronExpressionDescriptor.getDescription("0 15 10 * * ? 2005"));
+        assertEquals("A cada minuto, entre 14:00 e 14:59", CronExpressionDescriptor.getDescription("0 * 14 * * ?"));
+        assertEquals("A cada 5 minutos, entre 14:00 e 14:59", CronExpressionDescriptor.getDescription("0 0/5 14 * * ?"));
+        assertEquals("A cada 5 minutos, Às 14:00 e 18:00", CronExpressionDescriptor.getDescription("0 0/5 14,18 * * ?"));
+        assertEquals("A cada minuto entre 14:00 e 14:05", CronExpressionDescriptor.getDescription("0 0-5 14 * * ?"));
+        assertEquals("Aos 10 e 44 minutos da hora, Às 14:00, somente de Quarta-feira, somente em Março", CronExpressionDescriptor.getDescription("0 10,44 14 ? 3 WED"));
+        assertEquals("Às 10:15, de Segunda-feira a Sexta-feira", CronExpressionDescriptor.getDescription("0 15 10 ? * MON-FRI"));
+        assertEquals("Às 10:15, no dia 15 do mês", CronExpressionDescriptor.getDescription("0 15 10 15 * ?"));
+        assertEquals("Às 10:15, no último dia do mês", CronExpressionDescriptor.getDescription("0 15 10 L * ?"));
+        assertEquals("Às 10:15, 2 dias antes do último dia do mês", CronExpressionDescriptor.getDescription("0 15 10 L-2 * ?"));
+        assertEquals("Às 10:15, na última Sexta-feira do mês", CronExpressionDescriptor.getDescription("0 15 10 ? * 6L"));
+        assertEquals("Às 10:15, na última Sexta-feira do mês, de 2002 a 2005", CronExpressionDescriptor.getDescription("0 15 10 ? * 6L 2002-2005"));
+        assertEquals("Às 10:15, on the terceira Sexta-feira do mês", CronExpressionDescriptor.getDescription("0 15 10 ? * 6#3"));
+        assertEquals("Às 15:00, no dia 10 do mês, somente de Sábado", CronExpressionDescriptor.getDescription("0 15 10 * 6"));
+        assertEquals("Às 12:00, a cada 5 dias", CronExpressionDescriptor.getDescription("0 0 12 1/5 * ?"));
+        assertEquals("Às 11:11, no dia 11 do mês, somente em Novembro", CronExpressionDescriptor.getDescription("0 11 11 11 11 ?"));
+        assertEquals("A cada 10 minutos, iniciando aos 5 minutos da hora", CronExpressionDescriptor.getDescription("5/10 * * * *"));
+        assertEquals("A cada 10 horas, iniciando Às 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Test resetting default locale
+        //
+        // NOTE: ADD LANGUAGE TESTS ABOVE THIS
         CronExpressionDescriptor.setDefaultLocale();
         assertEquals("At 12:00", CronExpressionDescriptor.getDescription("0 0 12 * * ?"));
         assertEquals("At 10:15", CronExpressionDescriptor.getDescription("0 15 10 ? * *"));
@@ -145,54 +206,5 @@ class CronExpressionDescriptorTest {
         assertEquals("At 11:11, on day 11 of the month, only in November", CronExpressionDescriptor.getDescription("0 11 11 11 11 ?"));
         assertEquals("Every 10 minutes, starting at 5 minutes past the hour", CronExpressionDescriptor.getDescription("5/10 * * * *"));
         assertEquals("Every 10 hours, starting at 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
-
-        // Tests for Portuguese localisation
-        CronExpressionDescriptor.setDefaultLocale(new Locale.Builder().setLanguage("pt").setRegion("PT").build());
-        assertEquals("Às 12:00", CronExpressionDescriptor.getDescription("0 0 12 * * ?"));
-        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 ? * *"));
-        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ?"));
-        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ? *"));
-        assertEquals("Às 10:15, somente em 2005", CronExpressionDescriptor.getDescription("0 15 10 * * ? 2005"));
-        assertEquals("A cada minuto, entre 14:00 e 14:59", CronExpressionDescriptor.getDescription("0 * 14 * * ?"));
-        assertEquals("A cada 5 minutos, entre 14:00 e 14:59", CronExpressionDescriptor.getDescription("0 0/5 14 * * ?"));
-        assertEquals("A cada 5 minutos, Às 14:00 e 18:00", CronExpressionDescriptor.getDescription("0 0/5 14,18 * * ?"));
-        assertEquals("A cada minuto entre 14:00 e 14:05", CronExpressionDescriptor.getDescription("0 0-5 14 * * ?"));
-        assertEquals("Aos 10 e 44 minutos da hora, Às 14:00, somente de Quarta-feira, somente em Março", CronExpressionDescriptor.getDescription("0 10,44 14 ? 3 WED"));
-        assertEquals("Às 10:15, de Segunda-feira a Sexta-feira", CronExpressionDescriptor.getDescription("0 15 10 ? * MON-FRI"));
-        assertEquals("Às 10:15, no dia 15 do mês", CronExpressionDescriptor.getDescription("0 15 10 15 * ?"));
-        assertEquals("Às 10:15, no último dia do mês", CronExpressionDescriptor.getDescription("0 15 10 L * ?"));
-        assertEquals("Às 10:15, 2 dias antes do último dia do mês", CronExpressionDescriptor.getDescription("0 15 10 L-2 * ?"));
-        assertEquals("Às 10:15, na última Sexta-feira do mês", CronExpressionDescriptor.getDescription("0 15 10 ? * 6L"));
-        assertEquals("Às 10:15, na última Sexta-feira do mês, de 2002 a 2005", CronExpressionDescriptor.getDescription("0 15 10 ? * 6L 2002-2005"));
-        assertEquals("Às 10:15, on the terceira Sexta-feira do mês", CronExpressionDescriptor.getDescription("0 15 10 ? * 6#3"));
-        assertEquals("Às 15:00, no dia 10 do mês, somente de Sábado", CronExpressionDescriptor.getDescription("0 15 10 * 6"));
-        assertEquals("Às 12:00, a cada 5 dias", CronExpressionDescriptor.getDescription("0 0 12 1/5 * ?"));
-        assertEquals("Às 11:11, no dia 11 do mês, somente em Novembro", CronExpressionDescriptor.getDescription("0 11 11 11 11 ?"));
-        assertEquals("A cada 10 minutos, iniciando aos 5 minutos da hora", CronExpressionDescriptor.getDescription("5/10 * * * *"));
-        assertEquals("A cada 10 horas, iniciando Às 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
-
-        CronExpressionDescriptor.setDefaultLocale(new Locale("pt","BR"));
-        assertEquals("Às 12:00", CronExpressionDescriptor.getDescription("0 0 12 * * ?"));
-        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 ? * *"));
-        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ?"));
-        assertEquals("Às 10:15", CronExpressionDescriptor.getDescription("0 15 10 * * ? *"));
-        assertEquals("Às 10:15, somente em 2005", CronExpressionDescriptor.getDescription("0 15 10 * * ? 2005"));
-        assertEquals("A cada minuto, entre 14:00 e 14:59", CronExpressionDescriptor.getDescription("0 * 14 * * ?"));
-        assertEquals("A cada 5 minutos, entre 14:00 e 14:59", CronExpressionDescriptor.getDescription("0 0/5 14 * * ?"));
-        assertEquals("A cada 5 minutos, Às 14:00 e 18:00", CronExpressionDescriptor.getDescription("0 0/5 14,18 * * ?"));
-        assertEquals("A cada minuto entre 14:00 e 14:05", CronExpressionDescriptor.getDescription("0 0-5 14 * * ?"));
-        assertEquals("Aos 10 e 44 minutos da hora, Às 14:00, somente de Quarta-feira, somente em Março", CronExpressionDescriptor.getDescription("0 10,44 14 ? 3 WED"));
-        assertEquals("Às 10:15, de Segunda-feira a Sexta-feira", CronExpressionDescriptor.getDescription("0 15 10 ? * MON-FRI"));
-        assertEquals("Às 10:15, no dia 15 do mês", CronExpressionDescriptor.getDescription("0 15 10 15 * ?"));
-        assertEquals("Às 10:15, no último dia do mês", CronExpressionDescriptor.getDescription("0 15 10 L * ?"));
-        assertEquals("Às 10:15, 2 dias antes do último dia do mês", CronExpressionDescriptor.getDescription("0 15 10 L-2 * ?"));
-        assertEquals("Às 10:15, na última Sexta-feira do mês", CronExpressionDescriptor.getDescription("0 15 10 ? * 6L"));
-        assertEquals("Às 10:15, na última Sexta-feira do mês, de 2002 a 2005", CronExpressionDescriptor.getDescription("0 15 10 ? * 6L 2002-2005"));
-        assertEquals("Às 10:15, on the terceira Sexta-feira do mês", CronExpressionDescriptor.getDescription("0 15 10 ? * 6#3"));
-        assertEquals("Às 15:00, no dia 10 do mês, somente de Sábado", CronExpressionDescriptor.getDescription("0 15 10 * 6"));
-        assertEquals("Às 12:00, a cada 5 dias", CronExpressionDescriptor.getDescription("0 0 12 1/5 * ?"));
-        assertEquals("Às 11:11, no dia 11 do mês, somente em Novembro", CronExpressionDescriptor.getDescription("0 11 11 11 11 ?"));
-        assertEquals("A cada 10 minutos, iniciando aos 5 minutos da hora", CronExpressionDescriptor.getDescription("5/10 * * * *"));
-        assertEquals("A cada 10 horas, iniciando Às 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
     }
 }
