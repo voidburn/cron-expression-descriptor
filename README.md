@@ -86,6 +86,7 @@ ExpressionDescriptor.getDescription("0 0 12 * * ?", new Options() {{
   * Norwegian - nb ([Siarhei Khalipski](https://github.com/KhalipskiSiarhei))
   * Polish - pl ([foka](https://github.com/foka))
   * Portuguese (Brazil) - pt-BR ([Renato Lima](https://github.com/natenho))
+  * Portuguese (Portugal) - pt-PT ([Miguel Guimarães](https://github.com/hmiguim))
   * Romanian - ro ([Illegitimis](https://github.com/illegitimis))
   * Russian - ru ([LbISS](https://github.com/LbISS))
   * Slovenian - sl-SI ([Jani Bevk](https://github.com/jenzy))
@@ -93,7 +94,7 @@ ExpressionDescriptor.getDescription("0 0 12 * * ?", new Options() {{
   * Spanish (Mexico) - es-MX ([Ion Mincu](https://github.com/ionmincu))
   * Swedish - sv ([roobin](https://github.com/roobin))
   * Turkish - tr ([Mustafa SADEDİL](https://github.com/sadedil))
-* Ukrainian - uk ([Taras](https://github.com/tbudurovych))
+  * Ukrainian - uk ([Taras](https://github.com/tbudurovych))
 
 If you want to manually set a default Locale for the descripion, to be used for all subsequent calls to "
 getDescription()" you can use the static method "setDefaultLocale()" by passing it the language identifier:
