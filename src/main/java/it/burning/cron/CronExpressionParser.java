@@ -129,18 +129,27 @@ public class CronExpressionParser {
                 throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldDoW")), DOW);
             }
 
-            // Adjust Day of Week index for regular cron expressions (5 parts only). In regular cron "7" is accepted as sunday but not considered standard.
-            if (partsCount == 5) {
-                if (dowDigits.equals("7")) {
-                    dowDigitsAdjusted = "0";
+            if (options.useJavaEeScheduleExpression) {
+                if (partsCount == 5) {
+                    if (dowDigits.equals("7")) {
+                        dowDigitsAdjusted = "0";
+                    }
                 }
             } else {
-                // If the expression has more than 5 parts (which means it includes seconds and/or years), Sunday is specified as 1 and Saturday is specified as 7.
-                // To normalize, we bring it back in the 0-6 range.
-                //
-                // See Quartz cron triggers (http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html)
-                dowDigitsAdjusted = String.valueOf(Integer.parseInt(dowDigits) - 1);
+                // Adjust Day of Week index for regular cron expressions (5 parts only). In regular cron "7" is accepted as sunday but not considered standard.
+                if (partsCount == 5) {
+                    if (dowDigits.equals("7")) {
+                        dowDigitsAdjusted = "0";
+                    }
+                } else {
+                    // If the expression has more than 5 parts (which means it includes seconds and/or years), Sunday is specified as 1 and Saturday is specified as 7.
+                    // To normalize, we bring it back in the 0-6 range.
+                    //
+                    // See Quartz cron triggers (http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html)
+                    dowDigitsAdjusted = String.valueOf(Integer.parseInt(dowDigits) - 1);
+                }
             }
+
 
             return value.replace(dowDigits, dowDigitsAdjusted);
         }
@@ -225,10 +234,11 @@ public class CronExpressionParser {
         //region FIELDS
 
         // Defaults
-        private boolean throwExceptionOnParseError = true;
-        private boolean verbose                    = false;
-        private boolean use24HourTimeFormat        = true;
-        private Locale  locale                     = Locale.getDefault();
+        private boolean throwExceptionOnParseError  = true;
+        private boolean verbose                     = false;
+        private boolean use24HourTimeFormat         = true;
+        private Locale  locale                      = Locale.getDefault();
+        private boolean useJavaEeScheduleExpression = false;
 
         //endregion
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -258,6 +268,14 @@ public class CronExpressionParser {
 
         public void setUse24HourTimeFormat(boolean use24HourTimeFormat) {
             this.use24HourTimeFormat = use24HourTimeFormat;
+        }
+
+        public void setUseJavaEeScheduleExpression(boolean useJavaEeScheduleExpression) {
+            this.useJavaEeScheduleExpression = useJavaEeScheduleExpression;
+        }
+
+        public boolean getUseJavaEeScheduleExpression() {
+            return this.useJavaEeScheduleExpression;
         }
 
         public Locale getLocale() {
