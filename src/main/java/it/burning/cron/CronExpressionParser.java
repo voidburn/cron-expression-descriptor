@@ -29,10 +29,10 @@ public class CronExpressionParser {
 
     // Config
     private static final String LOCALIZATION_BUNDLE = "localization";
-    private static final int MIN_YEAR = 1970;
-    private static final int MAX_YEAR = 2099;
-    private static final int MIN_YEAR_FREQUENCY = 0;
-    private static final int MAX_YEAR_FREQUENCY = MAX_YEAR - MIN_YEAR;
+    private static final int    MIN_YEAR            = 1970;
+    private static final int    MAX_YEAR            = 2099;
+    private static final int    MIN_YEAR_FREQUENCY  = 0;
+    private static final int    MAX_YEAR_FREQUENCY  = MAX_YEAR - MIN_YEAR;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // PLEASE NOTE:
@@ -110,11 +110,11 @@ public class CronExpressionParser {
     private final Pattern yearsValidationPattern = Pattern.compile("^(?:\\*)$|^\\d{4}$|^(?:\\*|\\d{4})/(?:\\d{1,3})$|^(?:\\d{4},)*(?:(?!^)\\d{4})$|^(?:\\d{4})-(?:\\d{4})$|^(?:\\d{4})-(?:\\d{4})/(?:\\d{1,3})$");
 
     // Pattern matching
-    private final Pattern yearPattern = Pattern.compile(".*\\d{4}$");
-    private final Pattern rangeTokenSearchPattern = Pattern.compile("[*/]");
-    private final Pattern stepValueSearchPattern = Pattern.compile("[*\\-,]");
-    private final Pattern singleItemTokenPattern = Pattern.compile("^[0-9]+$");
-    private final RxReplace dowReplacer = new RxReplace("(^\\d)|([^#/\\s]\\d)") {
+    private final Pattern   yearPattern             = Pattern.compile(".*\\d{4}$");
+    private final Pattern   rangeTokenSearchPattern = Pattern.compile("[*/]");
+    private final Pattern   stepValueSearchPattern  = Pattern.compile("[*\\-,]");
+    private final Pattern   singleItemTokenPattern  = Pattern.compile("^[0-9]+$");
+    private final RxReplace dowReplacer             = new RxReplace("(^\\d)|([^#/\\s]\\d)") {
         @Override
         public String replacement() {
             // Skip anything preceeded by # or /
@@ -203,10 +203,10 @@ public class CronExpressionParser {
     }
 
     // State
-    private final String expression;
-    private final Options options;
+    private final String         expression;
+    private final Options        options;
     private final ResourceBundle localization;
-    private int partsCount;
+    private       int            partsCount;
 
     //endregion
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,11 +234,11 @@ public class CronExpressionParser {
         //region FIELDS
 
         // Defaults
-        private boolean throwExceptionOnParseError = true;
-        private boolean verbose = false;
-        private boolean use24HourTimeFormat = true;
+        private boolean throwExceptionOnParseError  = true;
+        private boolean verbose                     = false;
+        private boolean use24HourTimeFormat         = true;
+        private Locale  locale                      = Locale.getDefault();
         private boolean useJavaEeScheduleExpression = false;
-        private Locale locale = Locale.getDefault();
 
         //endregion
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -446,7 +446,7 @@ public class CronExpressionParser {
                         if (rangeParts.length == 2) {
                             // Check if range parts are out of bounds
                             if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
-                                    Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
+                                Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
 
                                 throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                             }
@@ -469,7 +469,7 @@ public class CronExpressionParser {
                 // Check if range parts are out of bounds
                 final String[] rangeParts = parsed[6].split("-");
                 if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
-                        Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
+                    Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
 
                     throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                 }
