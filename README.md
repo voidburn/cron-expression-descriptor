@@ -46,7 +46,10 @@ dependencies {
  
  - **boolean throwExceptionOnParseError** - If exception occurs when trying to parse expression and generate description, whether to throw or catch and output the Exception message as the description. **(Default: true)**
  - **boolean verbose** - Whether to use a verbose description **(Default: false)**
- - **boolean use24HourTimeFormat** - If true, descriptions will use a [24-hour clock](https://en.wikipedia.org/wiki/24-hour_clock) **(Default: true)**
+ - **boolean use24HourTimeFormat** - If true, descriptions will use
+   a [24-hour clock](https://en.wikipedia.org/wiki/24-hour_clock) **(Default: true)**
+ - **boolean useJavaEeScheduleExpression** - If true, expressions with 5, 6 and 7 parts will all consider 0 and 7
+   as `SUNDAY` for the Day Of Week
  - **string locale** - The locale to use **(Default: current system locale)**
  
  Example usage with default options:
@@ -55,22 +58,48 @@ dependencies {
 ExpressionDescriptor.getDescription("0 0 12 * * ?");
 > "At 12:00, every day"
  ```
- Example usage with custom options:
-  
+
+Example usage with custom options:
+
  ```java
-ExpressionDescriptor.getDescription("0 0 12 * * ?", new Options() {{ 
-    setLocale("it");
-    setUse24HourTimeFormat(false);
-}});
-> "Alle 12:00 PM, ogni giorno"
+ExpressionDescriptor.getDescription("0 0 12 * * ?",new Options(){{
+        setLocale("it");
+        setUse24HourTimeFormat(false);
+        }});
+        >"Alle 12:00 PM, ogni giorno"
   ```
- 
- **Please Note**: Default options are cached internally, but if you want to use a custom Options set it is advisable to instantiate it only once and reuse it on every
- subsequent call to avoid useless allocation.
- 
- ## i18n
- 
- The following language translations are available.
+
+Example usage for JEE Timer
+expressions [** Available Since Version 1.2.6+ **] (https://docs.oracle.com/javaee/7/tutorial/ejb-basicexamples004.htm):
+
+ ```java
+ExpressionDescriptor.getDescription("0 0 13 * * 0",new Options(){{
+        setUseJavaEeScheduleExpression(true);
+        }});
+        >"At 13:00, only on Sunday"
+ ```
+
+```java
+ExpressionDescriptor.getDescription("0 0 13 * * 7",new Options(){{
+        setUseJavaEeScheduleExpression(true);
+        }});
+        >"At 13:00, only on Sunday"
+ ```
+
+```java
+ExpressionDescriptor.getDescription("0 0 13 * * 1",new Options(){{
+        setUseJavaEeScheduleExpression(true);
+        }});
+        >"At 13:00, only on Monday"
+ ```
+
+**Please Note**: Default options are cached internally, but if you want to use a custom Options set it is advisable to
+instantiate it only once and reuse it on every
+subsequent call to avoid useless allocation.
+
+## i18n
+
+The following language translations are available.
 
 * English - `en` ([Brady Holt](https://github.com/bradymholt))
 * Chinese Simplified - zh-Hans `zh-CN` ([Star Peng](https://github.com/starpeng))
