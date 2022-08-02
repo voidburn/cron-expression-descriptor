@@ -186,6 +186,9 @@ class CronExpressionDescriptorTest {
         assertEquals("A cada 10 minutos, iniciando aos 5 minutos da hora", CronExpressionDescriptor.getDescription("5/10 * * * *"));
         assertEquals("A cada 10 horas, iniciando Às 01:00", CronExpressionDescriptor.getDescription("0 1/10 * * *"));
 
+        //german localisation test for n-th of the month having a dot after the number
+        CronExpressionDescriptor.setDefaultLocale("de");
+        assertEquals("Um 13:00, am 3. Tag des Monats", CronExpressionDescriptor.getDescription("0 0 13 3 * ?"));
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Test resetting default locale
