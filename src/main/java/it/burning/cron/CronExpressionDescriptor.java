@@ -80,7 +80,7 @@ public class CronExpressionDescriptor {
         }
 
         this.options = options;
-        this.use24HourTimeFormat = options.use24HourTimeFormat();
+        this.use24HourTimeFormat = options.isUse24HourTimeFormat();
         this.locale = options.getLocale();
         this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale, new UTF8Control());
     }
@@ -138,7 +138,7 @@ public class CronExpressionDescriptor {
         this.parsed = false;
         this.expression = expression;
         this.options = options;
-        this.use24HourTimeFormat = options.use24HourTimeFormat();
+        this.use24HourTimeFormat = options.isUse24HourTimeFormat();
         this.locale = options.getLocale();
         this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale, new UTF8Control());
     }
@@ -179,7 +179,7 @@ public class CronExpressionDescriptor {
         this.parsed = false;
         this.expression = expression;
         this.options = options;
-        this.use24HourTimeFormat = options.use24HourTimeFormat();
+        this.use24HourTimeFormat = options.isUse24HourTimeFormat();
         this.locale = options.getLocale();
         this.localization = ResourceBundle.getBundle(LOCALIZATION_BUNDLE, this.locale, new UTF8Control());
     }

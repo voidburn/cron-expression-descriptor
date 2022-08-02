@@ -96,10 +96,16 @@ class CronExpressionDescriptorTest {
 
     @Test
     void testJEETimerSpecialCaseForMonday(){
-        //jee schedule expressions still use 0 as sunday, so 1 must be monday if set as workday
-        assertEquals("At 13:00, only on Monday", CronExpressionDescriptor.getDescription("0 0 13 * * 1", new Options() {{
+        final Options OPTS = new Options() {{
             setUseJavaEeScheduleExpression(true);
-        }}));
+        }};
+
+        // JEE schedule expressions still use 0 as sunday, so 1 must be monday if set as workday
+        assertEquals("At 13:00, only on Monday", CronExpressionDescriptor.getDescription("0 0 13 * * 1", OPTS));
+
+        // JEE schedule expressions use 0 and 7 as sunday
+        assertEquals("At 13:00, only on Sunday", CronExpressionDescriptor.getDescription("0 0 13 * * 0", OPTS));
+        assertEquals("At 13:00, only on Sunday", CronExpressionDescriptor.getDescription("0 0 13 * * 7", OPTS));
     }
 
     @Test

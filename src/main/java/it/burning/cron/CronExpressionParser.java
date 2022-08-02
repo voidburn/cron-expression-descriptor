@@ -129,11 +129,10 @@ public class CronExpressionParser {
                 throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldDoW")), DOW);
             }
 
+            // JEE considers 7 and 0 as sunday when specifying DOW (https://docs.oracle.com/javaee/7/tutorial/ejb-basicexamples004.htm)
             if (options.useJavaEeScheduleExpression) {
-                if (partsCount == 5) {
-                    if (dowDigits.equals("7")) {
-                        dowDigitsAdjusted = "0";
-                    }
+                if (dowDigits.equals("7")) {
+                    dowDigitsAdjusted = "0";
                 }
             } else {
                 // Adjust Day of Week index for regular cron expressions (5 parts only). In regular cron "7" is accepted as sunday but not considered standard.
@@ -237,8 +236,8 @@ public class CronExpressionParser {
         private boolean throwExceptionOnParseError  = true;
         private boolean verbose                     = false;
         private boolean use24HourTimeFormat         = true;
-        private Locale  locale                      = Locale.getDefault();
         private boolean useJavaEeScheduleExpression = false;
+        private Locale  locale                      = Locale.getDefault();
 
         //endregion
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -262,7 +261,7 @@ public class CronExpressionParser {
             this.verbose = verbose;
         }
 
-        public boolean use24HourTimeFormat() {
+        public boolean isUse24HourTimeFormat() {
             return use24HourTimeFormat;
         }
 
@@ -270,12 +269,12 @@ public class CronExpressionParser {
             this.use24HourTimeFormat = use24HourTimeFormat;
         }
 
-        public void setUseJavaEeScheduleExpression(boolean useJavaEeScheduleExpression) {
-            this.useJavaEeScheduleExpression = useJavaEeScheduleExpression;
+        public boolean isUseJavaEeScheduleExpression() {
+            return useJavaEeScheduleExpression;
         }
 
-        public boolean getUseJavaEeScheduleExpression() {
-            return this.useJavaEeScheduleExpression;
+        public void setUseJavaEeScheduleExpression(boolean useJavaEeScheduleExpression) {
+            this.useJavaEeScheduleExpression = useJavaEeScheduleExpression;
         }
 
         public Locale getLocale() {
@@ -301,6 +300,24 @@ public class CronExpressionParser {
          */
         public Options() {
 
+        }
+
+        /**
+         * \
+         * Constructor
+         *
+         * @param throwExceptionOnParseError  Defaults is TRUE
+         * @param verbose                     Defaults is FALSE
+         * @param use24HourTimeFormat         Defaults is TRUE
+         * @param useJavaEeScheduleExpression Defaults is FALSE
+         * @param locale                      Defaults is `Locale.getDefault()`
+         */
+        public Options(final boolean throwExceptionOnParseError, final boolean verbose, final boolean use24HourTimeFormat, final boolean useJavaEeScheduleExpression, final Locale locale) {
+            this.throwExceptionOnParseError = throwExceptionOnParseError;
+            this.verbose = verbose;
+            this.use24HourTimeFormat = use24HourTimeFormat;
+            this.useJavaEeScheduleExpression = useJavaEeScheduleExpression;
+            this.locale = locale;
         }
 
         //endregion
@@ -446,7 +463,7 @@ public class CronExpressionParser {
                         if (rangeParts.length == 2) {
                             // Check if range parts are out of bounds
                             if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
-                                Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
+                                    Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
 
                                 throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                             }
@@ -469,7 +486,7 @@ public class CronExpressionParser {
                 // Check if range parts are out of bounds
                 final String[] rangeParts = parsed[6].split("-");
                 if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
-                    Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
+                        Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
 
                     throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                 }
