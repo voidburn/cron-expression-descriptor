@@ -70,7 +70,7 @@ ExpressionDescriptor.getDescription("0 0 12 * * ?",new Options(){{
   ```
 
 Example usage for JEE Timer
-expressions [** Available Since Version 1.2.6+ **] (https://docs.oracle.com/javaee/7/tutorial/ejb-basicexamples004.htm):
+expressions [ **Available Since Version 1.2.6+** ] (https://docs.oracle.com/javaee/7/tutorial/ejb-basicexamples004.htm):
 
  ```java
 ExpressionDescriptor.getDescription("0 0 13 * * 0",new Options(){{

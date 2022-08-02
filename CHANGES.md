@@ -1,3 +1,20 @@
+**Version 1.2.6**
+
+* Added support for JEE Schedule format (https://docs.oracle.com/javaee/7/tutorial/ejb-basicexamples004.htm) via config
+  option
+
+**Version 1.2.5**
+
+* Merged Portuguese localization by Miguel Guimarães which moved the existing localization for Portuguese to pt-BR (
+  Brazil)
+
+**Version 1.2.4**
+
+* Setting a locale with a string descriptor now uses the Locale.forLanguageTag(descriptor) method.
+* All resource files are now forcibly read as UTF-8, this should fix display issues with many languages (See issue #3
+  for example)
+* Added descriptor tests for the Portuguese language.
+
 **Version 1.2.3**
 
 **BREAKING CHANGE**: To reset the default locale now you must invoke the method without passing "
