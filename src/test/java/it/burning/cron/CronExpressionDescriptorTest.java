@@ -95,6 +95,14 @@ class CronExpressionDescriptorTest {
     }
 
     @Test
+    void testJEETimerSpecialCaseForMonday(){
+        //jee schedule expressions still use 0 as sunday, so 1 must be monday if set as workday
+        assertEquals("At 13:00, only on Monday", CronExpressionDescriptor.getDescription("0 0 13 * * 1", new Options() {{
+            setUseJavaEeScheduleExpression(true);
+        }}));
+    }
+
+    @Test
     void setDefaultLocale() {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Tests for Italian localisations

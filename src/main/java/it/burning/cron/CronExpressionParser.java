@@ -29,10 +29,10 @@ public class CronExpressionParser {
 
     // Config
     private static final String LOCALIZATION_BUNDLE = "localization";
-    private static final int    MIN_YEAR            = 1970;
-    private static final int    MAX_YEAR            = 2099;
-    private static final int    MIN_YEAR_FREQUENCY  = 0;
-    private static final int    MAX_YEAR_FREQUENCY  = MAX_YEAR - MIN_YEAR;
+    private static final int MIN_YEAR = 1970;
+    private static final int MAX_YEAR = 2099;
+    private static final int MIN_YEAR_FREQUENCY = 0;
+    private static final int MAX_YEAR_FREQUENCY = MAX_YEAR - MIN_YEAR;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // PLEASE NOTE:
@@ -110,11 +110,11 @@ public class CronExpressionParser {
     private final Pattern yearsValidationPattern = Pattern.compile("^(?:\\*)$|^\\d{4}$|^(?:\\*|\\d{4})/(?:\\d{1,3})$|^(?:\\d{4},)*(?:(?!^)\\d{4})$|^(?:\\d{4})-(?:\\d{4})$|^(?:\\d{4})-(?:\\d{4})/(?:\\d{1,3})$");
 
     // Pattern matching
-    private final Pattern   yearPattern             = Pattern.compile(".*\\d{4}$");
-    private final Pattern   rangeTokenSearchPattern = Pattern.compile("[*/]");
-    private final Pattern   stepValueSearchPattern  = Pattern.compile("[*\\-,]");
-    private final Pattern   singleItemTokenPattern  = Pattern.compile("^[0-9]+$");
-    private final RxReplace dowReplacer             = new RxReplace("(^\\d)|([^#/\\s]\\d)") {
+    private final Pattern yearPattern = Pattern.compile(".*\\d{4}$");
+    private final Pattern rangeTokenSearchPattern = Pattern.compile("[*/]");
+    private final Pattern stepValueSearchPattern = Pattern.compile("[*\\-,]");
+    private final Pattern singleItemTokenPattern = Pattern.compile("^[0-9]+$");
+    private final RxReplace dowReplacer = new RxReplace("(^\\d)|([^#/\\s]\\d)") {
         @Override
         public String replacement() {
             // Skip anything preceeded by # or /
@@ -129,18 +129,27 @@ public class CronExpressionParser {
                 throw new CronExpressionParseException(String.format(getString("InvalidFieldExpressionFormat"), getString("InvalidFieldDoW")), DOW);
             }
 
-            // Adjust Day of Week index for regular cron expressions (5 parts only). In regular cron "7" is accepted as sunday but not considered standard.
-            if (partsCount == 5) {
-                if (dowDigits.equals("7")) {
-                    dowDigitsAdjusted = "0";
+            if (options.useJavaEeScheduleExpression) {
+                if (partsCount == 5) {
+                    if (dowDigits.equals("7")) {
+                        dowDigitsAdjusted = "0";
+                    }
                 }
             } else {
-                // If the expression has more than 5 parts (which means it includes seconds and/or years), Sunday is specified as 1 and Saturday is specified as 7.
-                // To normalize, we bring it back in the 0-6 range.
-                //
-                // See Quartz cron triggers (http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html)
-                dowDigitsAdjusted = String.valueOf(Integer.parseInt(dowDigits) - 1);
+                // Adjust Day of Week index for regular cron expressions (5 parts only). In regular cron "7" is accepted as sunday but not considered standard.
+                if (partsCount == 5) {
+                    if (dowDigits.equals("7")) {
+                        dowDigitsAdjusted = "0";
+                    }
+                } else {
+                    // If the expression has more than 5 parts (which means it includes seconds and/or years), Sunday is specified as 1 and Saturday is specified as 7.
+                    // To normalize, we bring it back in the 0-6 range.
+                    //
+                    // See Quartz cron triggers (http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html)
+                    dowDigitsAdjusted = String.valueOf(Integer.parseInt(dowDigits) - 1);
+                }
             }
+
 
             return value.replace(dowDigits, dowDigitsAdjusted);
         }
@@ -194,10 +203,10 @@ public class CronExpressionParser {
     }
 
     // State
-    private final String         expression;
-    private final Options        options;
+    private final String expression;
+    private final Options options;
     private final ResourceBundle localization;
-    private       int            partsCount;
+    private int partsCount;
 
     //endregion
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,9 +235,10 @@ public class CronExpressionParser {
 
         // Defaults
         private boolean throwExceptionOnParseError = true;
-        private boolean verbose                    = false;
-        private boolean use24HourTimeFormat        = true;
-        private Locale  locale                     = Locale.getDefault();
+        private boolean verbose = false;
+        private boolean use24HourTimeFormat = true;
+        private boolean useJavaEeScheduleExpression = false;
+        private Locale locale = Locale.getDefault();
 
         //endregion
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -258,6 +268,14 @@ public class CronExpressionParser {
 
         public void setUse24HourTimeFormat(boolean use24HourTimeFormat) {
             this.use24HourTimeFormat = use24HourTimeFormat;
+        }
+
+        public void setUseJavaEeScheduleExpression(boolean useJavaEeScheduleExpression) {
+            this.useJavaEeScheduleExpression = useJavaEeScheduleExpression;
+        }
+
+        public boolean getUseJavaEeScheduleExpression() {
+            return this.useJavaEeScheduleExpression;
         }
 
         public Locale getLocale() {
@@ -428,7 +446,7 @@ public class CronExpressionParser {
                         if (rangeParts.length == 2) {
                             // Check if range parts are out of bounds
                             if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
-                                Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
+                                    Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
 
                                 throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                             }
@@ -451,7 +469,7 @@ public class CronExpressionParser {
                 // Check if range parts are out of bounds
                 final String[] rangeParts = parsed[6].split("-");
                 if (Integer.parseInt(rangeParts[0]) < MIN_YEAR || Integer.parseInt(rangeParts[0]) > MAX_YEAR ||
-                    Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
+                        Integer.parseInt(rangeParts[1]) < MIN_YEAR || Integer.parseInt(rangeParts[1]) > MAX_YEAR) {
 
                     throw new CronExpressionParseException(String.format(getString("InvalidYearsRangeValue"), MIN_YEAR, MAX_YEAR), YEAR);
                 }
