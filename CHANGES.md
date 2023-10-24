@@ -1,3 +1,7 @@
+**Version 1.2.7**
+
+* Added Vietnamese localization by [Duong Van Minh](https://github.com/eddyduong3010)
+
 **Version 1.2.6**
 
 * Added support for JEE Schedule format (https://docs.oracle.com/javaee/7/tutorial/ejb-basicexamples004.htm) via config

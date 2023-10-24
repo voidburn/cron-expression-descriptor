@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ResourceBundleManager">
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_da.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_de.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_en.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_es.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_es_MX.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_fi.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_fr.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_it.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_ja.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_ko.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_nb.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_nl.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_pl.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_pt.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_pt_BR.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_ro.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_ru.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_sl.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_sv.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_tr.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_uk.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_zh_CN.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/localization_zh_HK.properties" />
+    <custom-resource-bundle>
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_da.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_de.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_en.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_es.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_es_MX.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_fi.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_fr.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_it.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_ja.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_ko.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_nb.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_nl.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_pl.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_pt.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_pt_BR.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_ro.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_ru.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_sl.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_sv.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_tr.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_uk.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_vi.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_zh_CN.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/localization_zh_HK.properties" />
+      <base-name>localization</base-name>
+    </custom-resource-bundle>
+  </component>
+</project>

@@ -124,6 +124,7 @@ The following language translations are available.
 * Swedish - `sv` ([roobin](https://github.com/roobin))
 * Turkish - `tr` ([Mustafa SADEDİL](https://github.com/sadedil))
 * Ukrainian - `uk` ([Taras](https://github.com/tbudurovych))
+* Vietnamese - `vi` ([Duong Van Minh](https://github.com/eddyduong3010))
 
 If you want to manually set a default Locale for the descripion, to be used for all subsequent calls to "
 getDescription()" you can use the static method "setDefaultLocale()" by passing it the language identifier:
