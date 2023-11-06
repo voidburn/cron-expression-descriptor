@@ -102,6 +102,7 @@ subsequent call to avoid useless allocation.
 The following language translations are available.
 
 * English - `en` ([Brady Holt](https://github.com/bradymholt))
+* Bulgarian - `bg` ([Angel Gospodinov](https://github.com/AngloIBS))
 * Chinese Simplified - zh-Hans `zh-CN` ([Star Peng](https://github.com/starpeng))
 * Chinese Traditional - zh-Hant `zh-TW` ([Ricky Chiang](https://github.com/metavige))
 * Danish - `da` ([Rasmus Melchior Jacobsen](https://github.com/rmja))
