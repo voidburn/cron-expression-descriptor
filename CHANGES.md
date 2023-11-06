@@ -1,3 +1,6 @@
+**Version 1.2.8**
+* Added Bulgarian localization by [Angel Gospodinov](https://github.com/AngloIBS)
+
 **Version 1.2.7**
 
 * Added Vietnamese localization by [Duong Van Minh](https://github.com/eddyduong3010)
