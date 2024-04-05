@@ -1,3 +1,6 @@
+**Version 1.2.9**
+* French localization improvements and fixes by [Erwan Garreau](https://github.com/ErwanGarreau)
+
 **Version 1.2.8**
 * Added Bulgarian localization by [Angel Gospodinov](https://github.com/AngloIBS)
 
