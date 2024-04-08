@@ -22,7 +22,7 @@ Add the following dependency to your pom.xml:
 <dependency>
   <groupId>it.burning</groupId>
   <artifactId>cron-expression-descriptor</artifactId>
-  <version>1.2.9</version>
+  <version>1.2.10</version>
 </dependency>
 ```
 
@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-    implementation "it.burning:cron-expression-descriptor:1.2.9"
+    implementation "it.burning:cron-expression-descriptor:1.2.10"
 }
 ```
  

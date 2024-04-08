@@ -1,3 +1,6 @@
+**Version 1.2.10**
+* Fix for French localization
+
 **Version 1.2.9**
 * French localization improvements and fixes by [Erwan Garreau](https://github.com/ErwanGarreau)
 
