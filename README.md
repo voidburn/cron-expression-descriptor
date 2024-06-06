@@ -73,21 +73,21 @@ Example usage for JEE Timer
 expressions [ **Available Since Version 1.2.6+** ] (https://docs.oracle.com/javaee/7/tutorial/ejb-basicexamples004.htm):
 
  ```java
-ExpressionDescriptor.getDescription("0 0 13 * * 0",new Options(){{
+CronExpressionDescriptor.getDescription("0 0 13 * * 0",new Options(){{
         setUseJavaEeScheduleExpression(true);
         }});
         >"At 13:00, only on Sunday"
  ```
 
 ```java
-ExpressionDescriptor.getDescription("0 0 13 * * 7",new Options(){{
+CronExpressionDescriptor.getDescription("0 0 13 * * 7",new Options(){{
         setUseJavaEeScheduleExpression(true);
         }});
         >"At 13:00, only on Sunday"
  ```
 
 ```java
-ExpressionDescriptor.getDescription("0 0 13 * * 1",new Options(){{
+CronExpressionDescriptor.getDescription("0 0 13 * * 1",new Options(){{
         setUseJavaEeScheduleExpression(true);
         }});
         >"At 13:00, only on Monday"
@@ -131,8 +131,8 @@ If you want to manually set a default Locale for the descripion, to be used for 
 getDescription()" you can use the static method "setDefaultLocale()" by passing it the language identifier:
 
  ```java
- ExpressionDescriptor.setDefaultLocale("it");
- ExpressionDescriptor.getDescription("0-10 11 * * *");
+ CronExpressionDescriptor.setDefaultLocale("it");
+ CronExpressionDescriptor.getDescription("0-10 11 * * *");
  > "Alle 12:00, ogni giorno"
 ```
 
@@ -141,16 +141,16 @@ And you can revert at any time to the default Locale:
 For Version 1.2.3+
 
  ```java
- ExpressionDescriptor.setDefaultLocale();
- ExpressionDescriptor.getDescription("0-10 11 * * *");
+ CronExpressionDescriptor.setDefaultLocale();
+ CronExpressionDescriptor.getDescription("0-10 11 * * *");
   > "At 12:00, every day"
  ```
 
 Up until Version 1.2.2
 
  ```java
- ExpressionDescriptor.setDefaultLocale(null);
- ExpressionDescriptor.getDescription("0-10 11 * * *");
+ CronExpressionDescriptor.setDefaultLocale(null);
+ CronExpressionDescriptor.getDescription("0-10 11 * * *");
   > "At 12:00, every day"
  ```
 
