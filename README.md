@@ -42,7 +42,7 @@ dependencies {
  
  ## Options
  
- A `ExpressionDescriptor.Options` object can be passed to `getDescription()`.  The following options are available:
+ A `CronExpressionParser.Options` object can be passed to `CronExpressionDescriptor.getDescription()`.  The following options are available:
  
  - **boolean throwExceptionOnParseError** - If exception occurs when trying to parse expression and generate description, whether to throw or catch and output the Exception message as the description. **(Default: true)**
  - **boolean verbose** - Whether to use a verbose description **(Default: false)**
@@ -55,14 +55,14 @@ dependencies {
  Example usage with default options:
  
  ```java
-ExpressionDescriptor.getDescription("0 0 12 * * ?");
+CronExpressionDescriptor.getDescription("0 0 12 * * ?");
 > "At 12:00, every day"
  ```
 
 Example usage with custom options:
 
  ```java
-ExpressionDescriptor.getDescription("0 0 12 * * ?",new Options(){{
+CronExpressionDescriptor.getDescription("0 0 12 * * ?",new Options(){{
         setLocale("it");
         setUse24HourTimeFormat(false);
         }});
