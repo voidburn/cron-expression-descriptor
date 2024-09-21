@@ -1,3 +1,6 @@
+# Archived
+Due to general lack of time, and limited interest, I am archiving this repository. No further versions will be updated on Maven. If you require customization you should include the `cron` and `utils` folders directly into your project.
+
 # Cron Expression Descriptor
 A Java library that converts cron expressions into human readable descriptions. Adapted from original work by Brady Holt (https://github.com/bradymholt/cron-expression-descriptor)
 
